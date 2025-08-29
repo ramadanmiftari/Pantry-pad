@@ -15,8 +15,10 @@
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
+  /* WICHTIG: versteckte Seiten sind wirklich unsichtbar */
   [hidden]{display:none !important;}
 
+  /* HOME (Hero) */
   .hero{min-height:100vh;background:var(--bg-grad);display:grid;grid-template-rows:auto 1fr;color:#fff}
   .topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 18px}
   .lang{position:relative}
@@ -37,24 +39,20 @@
   .twrap{display:flex;flex-direction:column;align-items:flex-start}
   .tmain{font-weight:700;font-size:18px}
   .tmuted{color:var(--muted);font-size:14px}
-  .hint{opacity:.9;font-size:13px;margin-top:8px}
 
+  /* Admin-Badges */
   .badgebar{position:absolute;top:10px;right:10px;display:flex;gap:6px}
   .badge{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;box-shadow:var(--shadow);font-size:14px}
   .add-tile{display:flex;align-items:center;justify-content:center;font-weight:700}
 
+  /* Page-Layout */
   .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
   header.pagebar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
   .ghost{background:#fff;color:#111;border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer}
   .pagewrap{padding:18px}
-
   .grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-  .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer;position:relative}
-  .catcard .big{font-size:34px;margin-bottom:8px}
-  .empty{padding:36px;text-align:center;color:#6b7280}
 
-  /* Inline-Editor */
+  /* Inline-Editor in der Kachel */
   .editbox{
     position:absolute; inset:8px; background:#fff; border:1px solid var(--line);
     border-radius:14px; box-shadow:var(--shadow); padding:12px; display:grid; gap:8px;
@@ -69,6 +67,7 @@
 </head>
 <body>
 
+<!-- HOME -->
 <section id="home" class="hero">
   <div class="topbar">
     <button id="adminBtn" class="admin-toggle">✏️ Bearbeiten</button>
@@ -90,6 +89,7 @@
   </div>
 </section>
 
+<!-- BESTAND – Orte -->
 <section id="stock" class="page" hidden>
   <header class="pagebar">
     <button class="ghost" onclick="nav('home')">🏠 Home</button>
@@ -101,7 +101,7 @@
 </section>
 
 <script>
-/* ===== Sprachen ===== */
+/* ===== Sprache ===== */
 const T={
   de:{label:'Deutsch',welcome:'👋 Willkommen im Pantry Pad',choose:'Bitte wähle eine Funktion:'},
   en:{label:'English',welcome:'👋 Welcome to Pantry Pad',choose:'Please choose an option:'},
@@ -110,69 +110,213 @@ const T={
   fr:{label:'Français',welcome:'👋 Bienvenue sur Pantry Pad',choose:'Choisissez une fonction :'}
 };
 const langBox=document.getElementById('langBox'), langBtn=document.getElementById('langBtn'), langLabel=document.getElementById('langLabel');
-const saved=localStorage.getItem('pantry_lang')||'de'; setLang(saved);
+const savedLang=localStorage.getItem('pantry_lang')||'de'; setLang(savedLang);
 langBtn.onclick=()=>langBox.classList.toggle('open');
-langBox.querySelectorAll('.lang-list button').forEach(b=>{b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');}});
+langBox.querySelectorAll('.lang-list button').forEach(b=>{
+  b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');};
+});
+document.addEventListener('click',e=>{if(!langBox.contains(e.target)) langBox.classList.remove('open');});
 function setLang(code){const L=T[code]||T.de; langLabel.textContent=L.label; document.getElementById('welcome').textContent=L.welcome; document.getElementById('choose').textContent=L.choose;}
 
-/* ===== Navigation ===== */
-function nav(id){["home","stock"].forEach(x=>document.getElementById(x).hidden=true); document.getElementById(id).hidden=false; window.scrollTo(0,0);}
-
-/* ===== Admin ===== */
-let ADMIN=JSON.parse(localStorage.getItem('pantry_admin')||'false');
-let HOME_EDIT=-1, PLACE_EDIT=-1;
-document.getElementById('adminBtn').onclick=()=>{ADMIN=!ADMIN; localStorage.setItem('pantry_admin',JSON.stringify(ADMIN)); renderHome(); renderStockPlaces();};
-
-/* ===== Home-Kacheln ===== */
-const HOME_DEFAULT=[{icon:'📦',title:'Bestand',subtitle:'Produkte nach Ort',action:'nav("stock")'},{icon:'🏪',title:'Supermärkte',subtitle:'Lidl, Aldi, REWE …',action:'alert("Bald verfügbar")'}];
-function loadHome(){return JSON.parse(localStorage.getItem('home_tiles')||'null')||HOME_DEFAULT.slice();}
-function saveHome(l){localStorage.setItem('home_tiles',JSON.stringify(l));}
-function renderHome(){
-  const g=document.getElementById('homeGrid'); g.innerHTML=''; const tiles=loadHome();
-  tiles.forEach((t,idx)=>{
-    const div=document.createElement('div'); div.className='tile'; div.innerHTML=`<div class="icon">${t.icon}</div><div class="twrap"><div class="tmain">${t.title}</div><div class="tmuted">${t.subtitle}</div></div>`;
-    if(ADMIN && HOME_EDIT===idx){
-      const box=document.createElement('div'); box.className='editbox';
-      box.innerHTML=`<h4>Kachel bearbeiten</h4>
-        <div class="row"><label>Icon</label><input id="i1" value="${t.icon}"></div>
-        <div class="row"><label>Titel</label><input id="i2" value="${t.title}"></div>
-        <div class="row"><label>Untertitel</label><input id="i3" value="${t.subtitle}"></div>
-        <div class="row"><label>Aktion</label><textarea id="i4">${t.action}</textarea></div>
-        <div class="actions"><button class="btn-sm" id="c">Abbrechen</button><button class="btn-sm btn-primary" id="s">Speichern</button></div>`;
-      box.querySelector('#c').onclick=e=>{HOME_EDIT=-1;renderHome();};
-      box.querySelector('#s').onclick=e=>{tiles[idx]={icon:box.querySelector('#i1').value,title:box.querySelector('#i2').value,subtitle:box.querySelector('#i3').value,action:box.querySelector('#i4').value}; saveHome(tiles);HOME_EDIT=-1;renderHome();};
-      div.appendChild(box);
-    } else {
-      div.onclick=()=>{if(ADMIN){HOME_EDIT=idx;renderHome();} else {eval(t.action);}};
-    }
-    g.appendChild(div);
-  });
+/* ===== Navigation (robust) ===== */
+function nav(id){
+  ["home","stock"].forEach(x=>{const el=document.getElementById(x); if(el) el.hidden=true;});
+  const target=document.getElementById(id); if(target) target.hidden=false;
+  window.scrollTo(0,0);
 }
 
-/* ===== Orte ===== */
-const PLACES_DEFAULT=[{icon:'🗄️',title:'Vorratsschrank',subtitle:'Trockene Lebensmittel',action:'alert("Orte-Kategorien bald")'},{icon:'❄️',title:'Gefriertruhe',subtitle:'Tiefkühlprodukte',action:'alert("Orte-Kategorien bald")'}];
-function loadPlaces(){return JSON.parse(localStorage.getItem('stock_places')||'null')||PLACES_DEFAULT.slice();}
-function savePlaces(l){localStorage.setItem('stock_places',JSON.stringify(l));}
+/* ===== Admin-Schalter ===== */
+let ADMIN = JSON.parse(localStorage.getItem('pantry_admin')||'false');
+let HOME_EDIT=-1, PLACE_EDIT=-1;
+const adminBtn=document.getElementById('adminBtn');
+adminBtn.onclick=()=>{
+  ADMIN=!ADMIN;
+  localStorage.setItem('pantry_admin', JSON.stringify(ADMIN));
+  // offene Editoren schließen
+  HOME_EDIT=-1; PLACE_EDIT=-1;
+  renderHome(); renderStockPlaces();
+};
+adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
+
+/* ===== Home-Kacheln (editierbar) ===== */
+const HOME_DEFAULT=[
+  {id:'stock',    icon:'📦', title:'Bestand',     subtitle:'Produkte nach Ort',     action:'nav("stock")'},
+  {id:'markets',  icon:'🏪', title:'Supermärkte', subtitle:'Lidl, Aldi, REWE …',     action:'alert("Supermärkte – bald verfügbar")'},
+  {id:'shop',     icon:'🛒', title:'Einkauf',     subtitle:'Fehlendes abhaken',      action:'alert("Einkauf – bald verfügbar")'},
+  {id:'overview', icon:'📊', title:'Übersicht',   subtitle:'MHD & Statistiken',      action:'alert("Übersicht – bald verfügbar")'}
+];
+function loadHome(){ return JSON.parse(localStorage.getItem('home_tiles')||'null') || HOME_DEFAULT.slice(); }
+function saveHome(list){ localStorage.setItem('home_tiles', JSON.stringify(list)); }
+function deleteHomeTile(idx){
+  const tiles=loadHome(); if(tiles.length<=1){ alert('Mindestens 1 Kachel muss bleiben.'); return; }
+  if(confirm('Diese Kachel löschen?')){ tiles.splice(idx,1); saveHome(tiles); HOME_EDIT=-1; renderHome(); }
+}
+function addHomeTile(){
+  const tiles=loadHome();
+  tiles.push({id:'custom_'+Date.now(), icon:'⭐', title:'Neue Kachel', subtitle:'Untertitel', action:'alert("Platzhalter")'});
+  saveHome(tiles); renderHome();
+}
+function renderHome(){
+  const grid=document.getElementById('homeGrid'); grid.innerHTML='';
+  const tiles=loadHome();
+
+  tiles.forEach((t,idx)=>{
+    const card=document.createElement('div');
+    card.className='tile';
+    card.innerHTML=`<div class="icon">${t.icon||'🔲'}</div>
+                    <div class="twrap"><div class="tmain">${t.title||'Kachel'}</div>
+                    <div class="tmuted">${t.subtitle||''}</div></div>`;
+
+    // Navigieren: immer erlaubt, außer wenn genau diese Kachel gerade editiert wird
+    card.onclick=(e)=>{
+      if(HOME_EDIT===idx) return;
+      try{ eval(t.action||''); }catch(err){ alert('Keine Aktion hinterlegt'); }
+    };
+
+    // Admin-Badges außerhalb des Editors
+    if(ADMIN && HOME_EDIT!==idx){
+      const bar=document.createElement('div'); bar.className='badgebar';
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
+      edit.onclick=(ev)=>{ev.stopPropagation(); HOME_EDIT=idx; renderHome();};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
+      del.onclick=(ev)=>{ev.stopPropagation(); deleteHomeTile(idx);};
+      bar.appendChild(edit); bar.appendChild(del); card.appendChild(bar);
+    }
+
+    // Inline-Editor Overlay
+    if(ADMIN && HOME_EDIT===idx){
+      const box=document.createElement('div'); box.className='editbox';
+      box.innerHTML=`<h4>Home-Kachel bearbeiten</h4>
+        <div class="row"><label>Icon</label><input id="e_icon" value="${t.icon||''}" placeholder="z. B. 📦"></div>
+        <div class="row"><label>Titel</label><input id="e_title" value="${t.title||''}" placeholder="Titel"></div>
+        <div class="row"><label>Untertitel</label><input id="e_sub" value="${t.subtitle||''}" placeholder="Untertitel"></div>
+        <div class="row"><label>Aktion</label><textarea id="e_act" rows="2" placeholder='z. B. nav("stock") oder alert("Hi")'>${t.action||''}</textarea></div>
+        <div class="actions">
+          <button class="btn-sm" id="cancel">Abbrechen</button>
+          <button class="btn-sm btn-primary" id="save">Speichern</button>
+        </div>`;
+      // Klicks im Editor nicht "durchfallen" lassen
+      box.onclick=(ev)=>ev.stopPropagation();
+      box.querySelector('#cancel').onclick=(ev)=>{ev.stopPropagation(); HOME_EDIT=-1; renderHome();};
+      box.querySelector('#save').onclick=(ev)=>{
+        ev.stopPropagation();
+        const tiles=loadHome();
+        tiles[idx]={
+          ...tiles[idx],
+          icon: box.querySelector('#e_icon').value.trim(),
+          title: box.querySelector('#e_title').value.trim(),
+          subtitle: box.querySelector('#e_sub').value.trim(),
+          action: box.querySelector('#e_act').value.trim()
+        };
+        saveHome(tiles); HOME_EDIT=-1; renderHome();
+      };
+      card.appendChild(box);
+    }
+
+    grid.appendChild(card);
+  });
+
+  // + Kachel hinzufügen (nur wenn kein Editor offen)
+  if(ADMIN && HOME_EDIT===-1){
+    const add=document.createElement('button');
+    add.className='tile add-tile';
+    add.textContent='＋ Kachel hinzufügen';
+    add.onclick=(e)=>{e.stopPropagation(); addHomeTile();};
+    grid.appendChild(add);
+  }
+
+  // Button-Label aktualisieren
+  adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
+}
+
+/* ===== Bestand → Orte (editierbar) ===== */
+const PLACES_DEFAULT=[
+  {id:'all',     icon:'📦', title:'Gesamtbestand', subtitle:'Alles auf einmal',         action:'alert("Gesamtbestand – bald")'},
+  {id:'pantry',  icon:'🗄️', title:'Vorratsschrank', subtitle:'Trockene Lebensmittel',   action:'alert("Vorratsschrank → Kategorien – bald")'},
+  {id:'freezer', icon:'❄️', title:'Gefriertruhe',   subtitle:'Tiefgekühltes',           action:'alert("Gefriertruhe → Kategorien – bald")'},
+  {id:'fridge',  icon:'🧊', title:'Kühlschrank',    subtitle:'Frische Ware',            action:'alert("Kühlschrank → Kategorien – bald")'}
+];
+function loadPlaces(){ return JSON.parse(localStorage.getItem('stock_places')||'null') || PLACES_DEFAULT.slice(); }
+function savePlaces(list){ localStorage.setItem('stock_places', JSON.stringify(list)); }
+function deletePlaceTile(idx){
+  const list=loadPlaces(); if(list.length<=1){ alert('Mindestens 1 Ort muss bleiben.'); return; }
+  if(confirm('Diesen Ort löschen?')){ list.splice(idx,1); savePlaces(list); PLACE_EDIT=-1; renderStockPlaces(); }
+}
+function addPlaceTile(){
+  const list=loadPlaces();
+  list.push({id:'place_'+Date.now(), icon:'🗂️', title:'Neuer Ort', subtitle:'Beschreibung', action:'alert("Platzhalter-Ort")'});
+  savePlaces(list); renderStockPlaces();
+}
 function renderStockPlaces(){
-  const g=document.getElementById('stockGrid'); g.innerHTML=''; const list=loadPlaces();
-  list.forEach((p,idx)=>{
-    const div=document.createElement('div'); div.className='tile'; div.innerHTML=`<div class="icon">${p.icon}</div><div class="twrap"><div class="tmain">${p.title}</div><div class="tmuted">${p.subtitle}</div></div>`;
+  const grid=document.getElementById('stockGrid'); grid.innerHTML='';
+  const places=loadPlaces();
+
+  places.forEach((p,idx)=>{
+    const card=document.createElement('div');
+    card.className='tile';
+    card.innerHTML=`<span class="icon">${p.icon||'📦'}</span>
+                    <div class="twrap"><div class="tmain">${p.title||''}</div>
+                    <div class="tmuted">${p.subtitle||''}</div></div>`;
+
+    // Navigieren: immer erlaubt, außer wenn genau diese Karte editiert wird
+    card.onclick=(e)=>{
+      if(PLACE_EDIT===idx) return;
+      try{ eval(p.action||''); }catch(err){ alert('Keine Aktion hinterlegt'); }
+    };
+
+    // Admin-Badges außerhalb des Editors
+    if(ADMIN && PLACE_EDIT!==idx){
+      const bar=document.createElement('div'); bar.className='badgebar';
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
+      edit.onclick=(ev)=>{ev.stopPropagation(); PLACE_EDIT=idx; renderStockPlaces();};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
+      del.onclick=(ev)=>{ev.stopPropagation(); deletePlaceTile(idx);};
+      bar.appendChild(edit); bar.appendChild(del); card.appendChild(bar);
+    }
+
+    // Inline-Editor Overlay
     if(ADMIN && PLACE_EDIT===idx){
       const box=document.createElement('div'); box.className='editbox';
       box.innerHTML=`<h4>Ort bearbeiten</h4>
-        <div class="row"><label>Icon</label><input id="j1" value="${p.icon}"></div>
-        <div class="row"><label>Titel</label><input id="j2" value="${p.title}"></div>
-        <div class="row"><label>Untertitel</label><input id="j3" value="${p.subtitle}"></div>
-        <div class="row"><label>Aktion</label><textarea id="j4">${p.action}</textarea></div>
-        <div class="actions"><button class="btn-sm" id="c">Abbrechen</button><button class="btn-sm btn-primary" id="s">Speichern</button></div>`;
-      box.querySelector('#c').onclick=e=>{PLACE_EDIT=-1;renderStockPlaces();};
-      box.querySelector('#s').onclick=e=>{list[idx]={icon:box.querySelector('#j1').value,title:box.querySelector('#j2').value,subtitle:box.querySelector('#j3').value,action:box.querySelector('#j4').value}; savePlaces(list);PLACE_EDIT=-1;renderStockPlaces();};
-      div.appendChild(box);
-    } else {
-      div.onclick=()=>{if(ADMIN){PLACE_EDIT=idx;renderStockPlaces();} else {eval(p.action);}};
+        <div class="row"><label>Icon</label><input id="p_icon" value="${p.icon||''}" placeholder="z. B. 🗄️"></div>
+        <div class="row"><label>Titel</label><input id="p_title" value="${p.title||''}" placeholder="Titel"></div>
+        <div class="row"><label>Untertitel</label><input id="p_sub" value="${p.subtitle||''}" placeholder="Untertitel"></div>
+        <div class="row"><label>Aktion</label><textarea id="p_act" rows="2" placeholder='z. B. alert("Hi")'>${p.action||''}</textarea></div>
+        <div class="actions">
+          <button class="btn-sm" id="cancel">Abbrechen</button>
+          <button class="btn-sm btn-primary" id="save">Speichern</button>
+        </div>`;
+      box.onclick=(ev)=>ev.stopPropagation(); // Klicks im Editor abfangen
+      box.querySelector('#cancel').onclick=(ev)=>{ev.stopPropagation(); PLACE_EDIT=-1; renderStockPlaces();};
+      box.querySelector('#save').onclick=(ev)=>{
+        ev.stopPropagation();
+        const list=loadPlaces();
+        list[idx]={
+          ...list[idx],
+          icon: box.querySelector('#p_icon').value.trim(),
+          title: box.querySelector('#p_title').value.trim(),
+          subtitle: box.querySelector('#p_sub').value.trim(),
+          action: box.querySelector('#p_act').value.trim()
+        };
+        savePlaces(list); PLACE_EDIT=-1; renderStockPlaces();
+      };
+      card.appendChild(box);
     }
-    g.appendChild(div);
+
+    grid.appendChild(card);
   });
+
+  // + Ort hinzufügen (nur wenn kein Editor offen)
+  if(ADMIN && PLACE_EDIT===-1){
+    const add=document.createElement('button');
+    add.className='tile add-tile';
+    add.textContent='＋ Ort hinzufügen';
+    add.onclick=(e)=>{e.stopPropagation(); addPlaceTile();};
+    grid.appendChild(add);
+  }
+
+  // Button-Label aktualisieren
+  adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
 }
 
 /* ===== Init ===== */
