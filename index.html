@@ -17,7 +17,6 @@
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
   [hidden]{display:none !important;}
 
-  /* HOME (Hero) */
   .hero{min-height:100vh;background:var(--bg-grad);display:grid;grid-template-rows:auto 1fr;color:#fff}
   .topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 18px}
   .lang{position:relative}
@@ -40,30 +39,38 @@
   .tmuted{color:var(--muted);font-size:14px}
   .hint{opacity:.9;font-size:13px;margin-top:8px}
 
-  /* Admin Badges */
   .badgebar{position:absolute;top:10px;right:10px;display:flex;gap:6px}
   .badge{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;box-shadow:var(--shadow);font-size:14px}
   .add-tile{display:flex;align-items:center;justify-content:center;font-weight:700}
 
-  /* Subpages */
   .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
   header.pagebar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
   .ghost{background:#fff;color:#111;border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer}
   .pagewrap{padding:18px}
 
-  /* Grids */
   .grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
   .catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
   .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer;position:relative}
   .catcard .big{font-size:34px;margin-bottom:8px}
   .empty{padding:36px;text-align:center;color:#6b7280}
+
+  /* Inline-Editor */
+  .editbox{
+    position:absolute; inset:8px; background:#fff; border:1px solid var(--line);
+    border-radius:14px; box-shadow:var(--shadow); padding:12px; display:grid; gap:8px;
+  }
+  .editbox h4{margin:0 0 4px 0; font-size:15px}
+  .editbox .row{display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center}
+  .editbox input, .editbox textarea{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; font-size:14px}
+  .editbox .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:6px}
+  .btn-sm{border:1px solid var(--line); background:#fff; border-radius:10px; padding:8px 12px; cursor:pointer}
+  .btn-primary{background:#20c997; color:#fff; border:none}
 </style>
 </head>
 <body>
 
-<!-- HOME -->
 <section id="home" class="hero">
-  <div class="topbar" id="topbar">
+  <div class="topbar">
     <button id="adminBtn" class="admin-toggle">✏️ Bearbeiten</button>
     <div class="lang" id="langBox">
       <button id="langBtn">🌐 <span id="langLabel">Deutsch</span></button>
@@ -80,11 +87,9 @@
     <h1 class="title" id="welcome">👋 Willkommen im Pantry Pad</h1>
     <p class="subtitle" id="choose">Bitte wähle eine Funktion:</p>
     <div class="grid" id="homeGrid"></div>
-    <div class="hint" id="hint">(Kacheln kannst du im Bearbeiten-Modus anpassen)</div>
   </div>
 </section>
 
-<!-- BESTAND – Orte -->
 <section id="stock" class="page" hidden>
   <header class="pagebar">
     <button class="ghost" onclick="nav('home')">🏠 Home</button>
@@ -92,243 +97,86 @@
   </header>
   <div class="pagewrap">
     <div class="grid2" id="stockGrid"></div>
-    <p class="hint">Tippe auf einen Ort, dann wählst du Kategorien wie an der SB-Kasse.</p>
-  </div>
-</section>
-
-<!-- BESTAND – Kategorien pro Ort -->
-<section id="stockCats" class="page" hidden>
-  <header class="pagebar">
-    <button class="ghost" onclick="nav('stock')">⬅️ Zurück</button>
-    <button class="ghost" onclick="nav('home')">🏠 Home</button>
-    <h3 id="placeTitle" style="margin:0">Ort</h3>
-  </header>
-  <div class="pagewrap">
-    <div id="catGrid" class="catgrid"></div>
-    <p class="hint">Kategorien wie an der SB-Kasse. Danach zeigen wir die Produkte (kommt im nächsten Schritt).</p>
-  </div>
-</section>
-
-<!-- BESTAND – Gesamt -->
-<section id="stockAll" class="page" hidden>
-  <header class="pagebar">
-    <button class="ghost" onclick="nav('stock')">⬅️ Zurück</button>
-    <button class="ghost" onclick="nav('home')">🏠 Home</button>
-    <h3 style="margin:0">📦 Gesamtbestand</h3>
-  </header>
-  <div class="pagewrap">
-    <div class="empty">Hier erscheinen später alle Produkte (Kacheln + Suche/Filter).</div>
   </div>
 </section>
 
 <script>
-/* ===== Sprachtexte ===== */
+/* ===== Sprachen ===== */
 const T={
-  de:{label:'Deutsch',welcome:'👋 Willkommen im Pantry Pad',choose:'Bitte wähle eine Funktion:',
-    tiles:{stock:['Bestand','Produkte nach Ort'],markets:['Supermärkte','Lidl, Aldi, REWE …'],shop:['Einkauf','Fehlendes abhaken'],overview:['Übersicht','MHD & Statistiken']}},
-  en:{label:'English',welcome:'👋 Welcome to Pantry Pad',choose:'Please choose an option:',
-    tiles:{stock:['Inventory','Items by location'],markets:['Supermarkets','Lidl, Aldi, REWE …'],shop:['Shopping','Check missing'],overview:['Overview','Expiry & stats']}},
-  tr:{label:'Türkçe',welcome:'👋 Pantry Pad’e hoş geldin',choose:'Lütfen bir seçenek seç:',
-    tiles:{stock:['Stok','Konuma göre ürünler'],markets:['Süpermarketler','Lidl, Aldi, REWE …'],shop:['Alışveriş','Eksikleri işaretle'],overview:['Genel Bakış','SKT & istatistikler']}},
-  it:{label:'Italiano',welcome:'👋 Benvenuto in Pantry Pad',choose:'Scegli un’opzione:',
-    tiles:{stock:['Scorte','Prodotti per posizione'],markets:['Supermercati','Lidl, Aldi, REWE …'],shop:['Spesa','Spunta mancanti'],overview:['Panoramica','Scadenze e statistiche']}},
-  fr:{label:'Français',welcome:'👋 Bienvenue sur Pantry Pad',choose:'Choisissez une fonction :',
-    tiles:{stock:['Stock','Produits par emplacement'],markets:['Supermarchés','Lidl, Aldi, REWE …'],shop:['Courses','Cocher les manquants'],overview:['Aperçu','DLUO & statistiques']}}
+  de:{label:'Deutsch',welcome:'👋 Willkommen im Pantry Pad',choose:'Bitte wähle eine Funktion:'},
+  en:{label:'English',welcome:'👋 Welcome to Pantry Pad',choose:'Please choose an option:'},
+  tr:{label:'Türkçe',welcome:'👋 Pantry Pad’e hoş geldin',choose:'Lütfen bir seçenek seç:'},
+  it:{label:'Italiano',welcome:'👋 Benvenuto in Pantry Pad',choose:'Scegli un’opzione:'},
+  fr:{label:'Français',welcome:'👋 Bienvenue sur Pantry Pad',choose:'Choisissez une fonction :'}
 };
-
-/* ===== Sprache anwenden ===== */
-const langBox=document.getElementById('langBox');
-const langBtn=document.getElementById('langBtn');
-const langLabel=document.getElementById('langLabel');
-const saved=localStorage.getItem('pantry_lang')||'de';
-setLang(saved);
+const langBox=document.getElementById('langBox'), langBtn=document.getElementById('langBtn'), langLabel=document.getElementById('langLabel');
+const saved=localStorage.getItem('pantry_lang')||'de'; setLang(saved);
 langBtn.onclick=()=>langBox.classList.toggle('open');
-langBox.querySelectorAll('.lang-list button').forEach(b=>{
-  b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');};
-});
-document.addEventListener('click',e=>{if(!langBox.contains(e.target)) langBox.classList.remove('open');});
-function setLang(code){
-  const L=T[code]||T.de;
-  document.documentElement.lang=code;
-  langLabel.textContent=L.label;
-  document.getElementById('welcome').textContent=L.welcome;
-  document.getElementById('choose').textContent=L.choose;
-  // Home-Tiles Texte kommen aus Daten; Untertitel defaulten auf DE, aber du kannst sie editieren
-}
+langBox.querySelectorAll('.lang-list button').forEach(b=>{b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');}});
+function setLang(code){const L=T[code]||T.de; langLabel.textContent=L.label; document.getElementById('welcome').textContent=L.welcome; document.getElementById('choose').textContent=L.choose;}
 
-/* ===== Navigation (robust) ===== */
-function nav(id){
-  ["home","stock","stockCats","stockAll"].forEach(x=>{
-    const el=document.getElementById(x);
-    if(el) el.hidden=true;
-  });
-  const target=document.getElementById(id);
-  if(target) target.hidden=false;
-  window.scrollTo(0,0);
-}
+/* ===== Navigation ===== */
+function nav(id){["home","stock"].forEach(x=>document.getElementById(x).hidden=true); document.getElementById(id).hidden=false; window.scrollTo(0,0);}
 
-/* ===== Admin-Modus ===== */
-let ADMIN = JSON.parse(localStorage.getItem('pantry_admin')||'false');
-const adminBtn=document.getElementById('adminBtn');
-function updateAdminButton(){ adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten'; }
-adminBtn.onclick=()=>{ ADMIN=!ADMIN; localStorage.setItem('pantry_admin',JSON.stringify(ADMIN)); renderHome(); renderStockPlaces(); updateAdminButton(); };
-updateAdminButton();
+/* ===== Admin ===== */
+let ADMIN=JSON.parse(localStorage.getItem('pantry_admin')||'false');
+let HOME_EDIT=-1, PLACE_EDIT=-1;
+document.getElementById('adminBtn').onclick=()=>{ADMIN=!ADMIN; localStorage.setItem('pantry_admin',JSON.stringify(ADMIN)); renderHome(); renderStockPlaces();};
 
-/* ===== Daten: Home-Kacheln (editierbar) ===== */
-const HOME_DEFAULT=[
-  {id:'stock', icon:'📦', title:'Bestand', subtitle:'Produkte nach Ort', action:'nav("stock")'},
-  {id:'markets', icon:'🏪', title:'Supermärkte', subtitle:'Lidl, Aldi, REWE …', action:'alert("Supermärkte – kommt bald")'},
-  {id:'shop', icon:'🛒', title:'Einkauf', subtitle:'Fehlendes abhaken', action:'alert("Einkauf – kommt bald")'},
-  {id:'overview', icon:'📊', title:'Übersicht', subtitle:'MHD & Statistiken', action:'alert("Übersicht – kommt bald")'},
-];
-function loadHome(){ return JSON.parse(localStorage.getItem('home_tiles')||'null') || HOME_DEFAULT.slice(); }
-function saveHome(list){ localStorage.setItem('home_tiles', JSON.stringify(list)); }
+/* ===== Home-Kacheln ===== */
+const HOME_DEFAULT=[{icon:'📦',title:'Bestand',subtitle:'Produkte nach Ort',action:'nav("stock")'},{icon:'🏪',title:'Supermärkte',subtitle:'Lidl, Aldi, REWE …',action:'alert("Bald verfügbar")'}];
+function loadHome(){return JSON.parse(localStorage.getItem('home_tiles')||'null')||HOME_DEFAULT.slice();}
+function saveHome(l){localStorage.setItem('home_tiles',JSON.stringify(l));}
 function renderHome(){
-  const grid=document.getElementById('homeGrid'); grid.innerHTML='';
-  const tiles=loadHome();
+  const g=document.getElementById('homeGrid'); g.innerHTML=''; const tiles=loadHome();
   tiles.forEach((t,idx)=>{
-    const btn=document.createElement('button');
-    btn.className='tile';
-    btn.innerHTML=`<div class="icon">${t.icon||'🔲'}</div><div class="twrap"><div class="tmain">${t.title||'Kachel'}</div><div class="tmuted">${t.subtitle||''}</div></div>`;
-    btn.onclick=()=>{ if(ADMIN) return; try{ eval(t.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
-    if(ADMIN){
-      const bar=document.createElement('div'); bar.className='badgebar';
-      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎';
-      edit.title='Bearbeiten'; edit.onclick=(ev)=>{ev.stopPropagation(); editHomeTile(idx);};
-      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️';
-      del.title='Löschen'; del.onclick=(ev)=>{ev.stopPropagation(); deleteHomeTile(idx);};
-      bar.appendChild(edit); bar.appendChild(del); btn.appendChild(bar);
+    const div=document.createElement('div'); div.className='tile'; div.innerHTML=`<div class="icon">${t.icon}</div><div class="twrap"><div class="tmain">${t.title}</div><div class="tmuted">${t.subtitle}</div></div>`;
+    if(ADMIN && HOME_EDIT===idx){
+      const box=document.createElement('div'); box.className='editbox';
+      box.innerHTML=`<h4>Kachel bearbeiten</h4>
+        <div class="row"><label>Icon</label><input id="i1" value="${t.icon}"></div>
+        <div class="row"><label>Titel</label><input id="i2" value="${t.title}"></div>
+        <div class="row"><label>Untertitel</label><input id="i3" value="${t.subtitle}"></div>
+        <div class="row"><label>Aktion</label><textarea id="i4">${t.action}</textarea></div>
+        <div class="actions"><button class="btn-sm" id="c">Abbrechen</button><button class="btn-sm btn-primary" id="s">Speichern</button></div>`;
+      box.querySelector('#c').onclick=e=>{HOME_EDIT=-1;renderHome();};
+      box.querySelector('#s').onclick=e=>{tiles[idx]={icon:box.querySelector('#i1').value,title:box.querySelector('#i2').value,subtitle:box.querySelector('#i3').value,action:box.querySelector('#i4').value}; saveHome(tiles);HOME_EDIT=-1;renderHome();};
+      div.appendChild(box);
+    } else {
+      div.onclick=()=>{if(ADMIN){HOME_EDIT=idx;renderHome();} else {eval(t.action);}};
     }
-    grid.appendChild(btn);
+    g.appendChild(div);
   });
-  if(ADMIN){
-    const add=document.createElement('button');
-    add.className='tile add-tile';
-    add.innerHTML='＋ Kachel hinzufügen';
-    add.onclick=()=>addHomeTile();
-    grid.appendChild(add);
-  }
-}
-function editHomeTile(idx){
-  const tiles=loadHome(); const t=tiles[idx];
-  const title=prompt('Titel:', t.title||''); if(title===null) return;
-  const subtitle=prompt('Untertitel:', t.subtitle||''); if(subtitle===null) return;
-  const icon=prompt('Emoji/Icon (z.B. 📦):', t.icon||''); if(icon===null) return;
-  const action=prompt('Aktion (z.B. nav("stock") oder alert("Text")):', t.action||''); if(action===null) return;
-  tiles[idx]={...t,title,subtitle,icon,action}; saveHome(tiles); renderHome();
-}
-function deleteHomeTile(idx){
-  const tiles=loadHome(); if(tiles.length<=1){ alert('Mindestens 1 Kachel muss bleiben.'); return; }
-  if(confirm('Diese Kachel löschen?')){ tiles.splice(idx,1); saveHome(tiles); renderHome(); }
-}
-function addHomeTile(){
-  const tiles=loadHome();
-  const title=prompt('Titel der neuen Kachel:','Neue Kachel'); if(title===null) return;
-  const subtitle=prompt('Untertitel:',''); if(subtitle===null) return;
-  const icon=prompt('Emoji/Icon (z.B. ⭐):','⭐'); if(icon===null) return;
-  const action=prompt('Aktion (z.B. alert("Hallo")):','alert("Platzhalter")'); if(action===null) return;
-  tiles.push({id:'custom_'+Date.now(), icon, title, subtitle, action});
-  saveHome(tiles); renderHome();
 }
 
-/* ===== Bestand → Orte (editierbar) ===== */
-const PLACES_DEFAULT=[
-  {id:'all', icon:'📦', title:'Gesamtbestand', subtitle:'Alles auf einmal', action:'openAll()'},
-  {id:'pantry', icon:'🗄️', title:'Vorratsschrank', subtitle:'Trockene Lebensmittel', action:'openPlace("Vorratsschrank")'},
-  {id:'freezer', icon:'❄️', title:'Gefriertruhe', subtitle:'Tiefgekühltes', action:'openPlace("Gefriertruhe")'},
-  {id:'fridge', icon:'🧊', title:'Kühlschrank', subtitle:'Frische Ware', action:'openPlace("Kühlschrank")'},
-];
-function loadPlaces(){ return JSON.parse(localStorage.getItem('stock_places')||'null') || PLACES_DEFAULT.slice(); }
-function savePlaces(list){ localStorage.setItem('stock_places', JSON.stringify(list)); }
+/* ===== Orte ===== */
+const PLACES_DEFAULT=[{icon:'🗄️',title:'Vorratsschrank',subtitle:'Trockene Lebensmittel',action:'alert("Orte-Kategorien bald")'},{icon:'❄️',title:'Gefriertruhe',subtitle:'Tiefkühlprodukte',action:'alert("Orte-Kategorien bald")'}];
+function loadPlaces(){return JSON.parse(localStorage.getItem('stock_places')||'null')||PLACES_DEFAULT.slice();}
+function savePlaces(l){localStorage.setItem('stock_places',JSON.stringify(l));}
 function renderStockPlaces(){
-  const grid=document.getElementById('stockGrid'); grid.innerHTML='';
-  const places=loadPlaces();
-  places.forEach((p,idx)=>{
-    const btn=document.createElement('button');
-    btn.className='tile';
-    btn.innerHTML=`<span class="icon">${p.icon||'📦'}</span><div class="twrap"><div class="tmain">${p.title||''}</div><div class="tmuted">${p.subtitle||''}</div></div>`;
-    btn.onclick=()=>{ if(ADMIN) return; try{ eval(p.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
-    if(ADMIN){
-      const bar=document.createElement('div'); bar.className='badgebar';
-      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
-      edit.onclick=(ev)=>{ev.stopPropagation(); editPlaceTile(idx);};
-      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
-      del.onclick=(ev)=>{ev.stopPropagation(); deletePlaceTile(idx);};
-      bar.appendChild(edit); bar.appendChild(del); btn.appendChild(bar);
+  const g=document.getElementById('stockGrid'); g.innerHTML=''; const list=loadPlaces();
+  list.forEach((p,idx)=>{
+    const div=document.createElement('div'); div.className='tile'; div.innerHTML=`<div class="icon">${p.icon}</div><div class="twrap"><div class="tmain">${p.title}</div><div class="tmuted">${p.subtitle}</div></div>`;
+    if(ADMIN && PLACE_EDIT===idx){
+      const box=document.createElement('div'); box.className='editbox';
+      box.innerHTML=`<h4>Ort bearbeiten</h4>
+        <div class="row"><label>Icon</label><input id="j1" value="${p.icon}"></div>
+        <div class="row"><label>Titel</label><input id="j2" value="${p.title}"></div>
+        <div class="row"><label>Untertitel</label><input id="j3" value="${p.subtitle}"></div>
+        <div class="row"><label>Aktion</label><textarea id="j4">${p.action}</textarea></div>
+        <div class="actions"><button class="btn-sm" id="c">Abbrechen</button><button class="btn-sm btn-primary" id="s">Speichern</button></div>`;
+      box.querySelector('#c').onclick=e=>{PLACE_EDIT=-1;renderStockPlaces();};
+      box.querySelector('#s').onclick=e=>{list[idx]={icon:box.querySelector('#j1').value,title:box.querySelector('#j2').value,subtitle:box.querySelector('#j3').value,action:box.querySelector('#j4').value}; savePlaces(list);PLACE_EDIT=-1;renderStockPlaces();};
+      div.appendChild(box);
+    } else {
+      div.onclick=()=>{if(ADMIN){PLACE_EDIT=idx;renderStockPlaces();} else {eval(p.action);}};
     }
-    grid.appendChild(btn);
+    g.appendChild(div);
   });
-  if(ADMIN){
-    const add=document.createElement('button'); add.className='tile add-tile'; add.textContent='＋ Ort hinzufügen';
-    add.onclick=()=>addPlaceTile(); grid.appendChild(add);
-  }
 }
-function editPlaceTile(idx){
-  const places=loadPlaces(); const p=places[idx];
-  const title=prompt('Titel (Ort):', p.title||''); if(title===null) return;
-  const subtitle=prompt('Untertitel:', p.subtitle||''); if(subtitle===null) return;
-  const icon=prompt('Emoji/Icon (z.B. 🗄️):', p.icon||''); if(icon===null) return;
-  const action=prompt('Aktion (z.B. openPlace("Vorratsschrank")):', p.action||''); if(action===null) return;
-  places[idx]={...p,title,subtitle,icon,action}; savePlaces(places); renderStockPlaces();
-}
-function deletePlaceTile(idx){
-  const places=loadPlaces(); if(places.length<=1){ alert('Mindestens 1 Ort muss bleiben.'); return; }
-  if(confirm('Diesen Ort löschen?')){ places.splice(idx,1); savePlaces(places); renderStockPlaces(); }
-}
-function addPlaceTile(){
-  const places=loadPlaces();
-  const title=prompt('Titel des Ortes:','Neuer Ort'); if(title===null) return;
-  const subtitle=prompt('Untertitel:',''); if(subtitle===null) return;
-  const icon=prompt('Emoji/Icon (z.B. 🗂️):','🗂️'); if(icon===null) return;
-  const action=prompt('Aktion (z.B. openPlace("Vorratsraum")):','alert("Platzhalter-Ort")'); if(action===null) return;
-  places.push({id:'place_'+Date.now(), icon, title, subtitle, action});
-  savePlaces(places); renderStockPlaces();
-}
-
-/* ===== Kategorien (wie SB-Kasse) ===== */
-const ALL_CATS=[
-  {name:'Backwaren',icon:'🍞'},
-  {name:'Getränke',icon:'🥤'},
-  {name:'Süßwaren',icon:'🍫'},
-  {name:'Gewürze',icon:'🧂'},
-  {name:'Konserven',icon:'🥫'},
-  {name:'Nudeln/Reis',icon:'🍝'},
-  {name:'Öle/Essig',icon:'🫗'},
-  {name:'Müsli/Frühstück',icon:'🥣'},
-  {name:'Snacks/Chips',icon:'🥨'},
-  {name:'Backzutaten',icon:'🧁'},
-  {name:'Reinigung',icon:'🧽'},
-  {name:'Gemüse/Obst',icon:'🥬'},
-  {name:'Fleisch/Fisch',icon:'🥩'},
-  {name:'Milchprodukte',icon:'🥛'},
-  {name:'Tiefkühl',icon:'❄️'},
-  {name:'Sonstiges',icon:'📦'}
-];
-let CURRENT_PLACE='';
-function openPlace(place){
-  CURRENT_PLACE=place;
-  document.getElementById('placeTitle').textContent='📍 '+place;
-  const grid=document.getElementById('catGrid'); grid.innerHTML='';
-  ALL_CATS.forEach(c=>{
-    const card=document.createElement('div');
-    card.className='catcard';
-    card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
-    card.onclick=()=>alert(`Öffne Kategorie „${c.name}“ in „${place}“ (Produkte kommen im nächsten Schritt)`);
-    if(ADMIN){
-      const bar=document.createElement('div'); bar.className='badgebar';
-      const info=document.createElement('div'); info.className='badge'; info.textContent='ℹ︎';
-      info.title='Kategorien sind vordefiniert – anpassbar kommt später';
-      bar.appendChild(info); card.appendChild(bar);
-    }
-    grid.appendChild(card);
-  });
-  nav('stockCats');
-}
-function openAll(){ nav('stockAll'); }
 
 /* ===== Init ===== */
-function renderAll(){ renderHome(); renderStockPlaces(); }
-renderAll();
+renderHome(); renderStockPlaces();
 </script>
 </body>
 </html>
