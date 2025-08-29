@@ -5,69 +5,101 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pantry Pad</title>
 <style>
-  :root{
-    --bg-grad: linear-gradient(135deg,#6a5cff,#20c997);
-    --card:#ffffff; --text:#1f2937; --muted:#64748b;
-    --shadow: 0 10px 30px rgba(0,0,0,.12);
-    --tile:#fff; --tile-hover:#f8fafc; --radius:18px;
-    --line:#e8eef5;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
-  [hidden]{display:none !important;}
+:root{
+  --bg-grad: linear-gradient(135deg,#6a5cff,#20c997);
+  --card:#fff; --text:#1f2937; --muted:#64748b; --line:#e8eef5;
+  --shadow:0 10px 30px rgba(0,0,0,.12); --tile:#fff; --tile-hover:#f8fafc; --radius:18px;
+  --ok:#e8fff1; --warn:#fff7da; --bad:#ffe5e5; --ok-text:#0a7a3a; --warn-text:#8a6700; --bad-text:#8a1a1a;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
+[hidden]{display:none !important}
 
-  /* HOME */
-  .hero{min-height:100vh;background:var(--bg-grad);display:grid;grid-template-rows:auto 1fr;color:#fff}
-  .topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 18px}
-  .lang{position:relative}
-  .lang button{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
-  .lang-list{position:absolute;right:0;top:46px;min-width:200px;background:#fff;color:#111;border-radius:14px;box-shadow:var(--shadow);display:none;overflow:hidden}
-  .lang.open .lang-list{display:block}
-  .lang-list button{width:100%;text-align:left;padding:10px 12px;border:0;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:10px}
-  .lang-list button:hover{background:#f8fafc}
-  .admin-toggle{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
+/* HERO */
+.hero{min-height:100vh;background:var(--bg-grad);display:grid;grid-template-rows:auto 1fr;color:#fff}
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 18px}
+.lang{position:relative}
+.lang button{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
+.lang-list{position:absolute;right:0;top:46px;min-width:200px;background:#fff;color:#111;border-radius:14px;box-shadow:var(--shadow);display:none;overflow:hidden}
+.lang.open .lang-list{display:block}
+.lang-list button{width:100%;text-align:left;padding:10px 12px;border:0;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:10px}
+.lang-list button:hover{background:#f8fafc}
+.admin-toggle{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
 
-  .wrap{display:grid;place-content:center;text-align:center;padding:24px;gap:20px}
-  .title{font-size:clamp(24px,4vw,36px);font-weight:800;margin:0}
-  .subtitle{opacity:.95;margin:0 0 6px;font-size:clamp(14px,2.2vw,18px)}
-  .grid{width:min(980px,94vw);margin:18px auto 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .tile{position:relative;background:var(--tile);color:#111;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .05s ease, background .2s ease}
-  .tile:active{transform:scale(.98)} .tile:hover{background:var(--tile-hover)}
-  .icon{font-size:28px;line-height:1}
-  .twrap{display:flex;flex-direction:column;align-items:flex-start}
-  .tmain{font-weight:700;font-size:18px}
-  .tmuted{color:var(--muted);font-size:14px}
+.wrap{display:grid;place-content:center;text-align:center;padding:24px;gap:20px}
+.title{font-size:clamp(24px,4vw,36px);font-weight:800;margin:0}
+.subtitle{opacity:.95;margin:0 0 6px;font-size:clamp(14px,2.2vw,18px)}
+.grid{width:min(980px,94vw);margin:18px auto 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.tile{position:relative;background:var(--tile);color:#111;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .05s ease, background .2s ease}
+.tile:active{transform:scale(.98)} .tile:hover{background:var(--tile-hover)}
+.icon{font-size:28px;line-height:1}
+.twrap{display:flex;flex-direction:column;align-items:flex-start}
+.tmain{font-weight:700;font-size:18px}
+.tmuted{color:var(--muted);font-size:14px}
+.badgebar{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.badge{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;box-shadow:var(--shadow);font-size:14px}
+.add-tile{display:flex;align-items:center;justify-content:center;font-weight:700}
 
-  /* Admin-Badges */
-  .badgebar{position:absolute;top:10px;right:10px;display:flex;gap:6px}
-  .badge{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;box-shadow:var(--shadow);font-size:14px}
-  .add-tile{display:flex;align-items:center;justify-content:center;font-weight:700}
+/* PAGES */
+.page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
+header.pagebar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.ghost{background:#fff;color:#111;border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer}
+.pagewrap{padding:18px}
+.grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer;position:relative}
+.catcard .big{font-size:34px;margin-bottom:8px}
+.hint{opacity:.8;font-size:13px;margin-top:6px}
+.cards{width:min(1200px,96vw);margin:0 auto;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.imgwrap{width:100%;aspect-ratio:1/1;background:#eee;display:grid;place-items:center}
+.card img{width:100%;height:100%;object-fit:cover}
+.body{padding:12px}
+.name{font-weight:800}
+.meta{font-size:.9rem;color:#555;margin-top:4px}
+.ribbon{position:absolute;top:10px;left:10px;padding:6px 8px;border-radius:10px;font-size:.8rem}
+.r-ok{background:var(--ok);color:var(--ok-text)}
+.r-warn{background:var(--warn);color:var(--warn-text)}
+.r-bad{background:var(--bad);color:var(--bad-text)}
+.empty{padding:40px;text-align:center;color:#6b7280}
 
-  /* Unterseiten */
-  .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
-  header.pagebar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-  .ghost{background:#fff;color:#111;border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer}
-  .pagewrap{padding:18px}
-  .grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+/* Dialoge */
+dialog{width:min(600px,96vw);border:none;border-radius:16px;padding:0;box-shadow:var(--shadow)}
+dialog header,dialog footer{padding:12px 16px}
+dialog header{border-bottom:1px solid var(--line)}
+dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+dialog form{padding:16px;display:grid;gap:10px}
+dialog input,dialog select,dialog textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
+.btn-primary{background:#20c997;color:#fff;border:none}
+.btn-danger{background:#ff6b6b;color:#fff;border:none}
 
-  /* Kategorien-Grid */
-  .catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-  .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer;position:relative}
-  .catcard .big{font-size:34px;margin-bottom:8px}
-  .hint{opacity:.8;font-size:13px;margin-top:6px}
+/* Inline-Editor in Kacheln */
+.editbox{position:absolute; inset:8px; background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:12px; display:grid; gap:8px}
+.editbox h4{margin:0 0 4px 0; font-size:15px}
+.editbox .row{display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center}
+.editbox input, .editbox textarea{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; font-size:14px}
+.editbox .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:6px}
+.btn-sm{border:1px solid var(--line); background:#fff; border-radius:10px; padding:8px 12px; cursor:pointer}
+.btn-sm.btn-primary{background:#20c997; color:#fff; border:none}
 
-  /* Inline-Editor */
-  .editbox{
-    position:absolute; inset:8px; background:#fff; border:1px solid var(--line);
-    border-radius:14px; box-shadow:var(--shadow); padding:12px; display:grid; gap:8px;
-  }
-  .editbox h4{margin:0 0 4px 0; font-size:15px}
-  .editbox .row{display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center}
-  .editbox input, .editbox textarea{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:10px; font-size:14px}
-  .editbox .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:6px}
-  .btn-sm{border:1px solid var(--line); background:#fff; border-radius:10px; padding:8px 12px; cursor:pointer}
-  .btn-primary{background:#20c997; color:#fff; border:none}
+/* Kochbuch */
+.rec-grid{width:min(1200px,96vw);margin:0 auto;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.rec-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;cursor:pointer}
+.rec-card .imgwrap{width:100%;aspect-ratio:16/10;background:#eee;display:grid;place-items:center}
+.rec-card .body{padding:12px}
+.rec-card .title{font-weight:800}
+.rec-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.badge-ok{background:var(--ok);color:var(--ok-text);padding:4px 8px;border-radius:10px;font-size:.8rem}
+.badge-missing{background:var(--bad);color:var(--bad-text);padding:4px 8px;border-radius:10px;font-size:.8rem}
+.ing-list{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+.ing-list li{display:flex;gap:8px;align-items:center}
+.ing-name{flex:1}
+.ing-status{font-size:.85rem}
+.rec-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rec-head img{width:220px;height:140px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:#f3f4f6}
+.rec-section{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-top:14px}
+.rec-steps{white-space:pre-wrap;line-height:1.45}
 </style>
 </head>
 <body>
@@ -114,9 +146,172 @@
   </header>
   <div class="pagewrap">
     <div id="catGrid" class="catgrid"></div>
-    <p class="hint">Tippe eine Kategorie an – im nächsten Schritt zeigen wir die Produkte.</p>
+    <p class="hint">Tippe eine Kategorie an – dann kannst du Produkte hinzufügen.</p>
   </div>
 </section>
+
+<!-- BESTAND – PRODUKTE -->
+<section id="stockItems" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="backToCats()">⬅️ Zurück</button>
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 id="itemsTitle" style="margin:0">📍 Ort · Kategorie</h3>
+    <span style="flex:1"></span>
+    <button class="ghost" onclick="openItemDialog()">+ Produkt</button>
+  </header>
+  <div class="pagewrap">
+    <div id="itemsGrid" class="cards"></div>
+    <div id="itemsEmpty" class="empty" hidden>Noch keine Produkte.</div>
+  </div>
+</section>
+
+<!-- SUPERMÄRKTE -->
+<section id="markets" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">🏪 Supermärkte</h3>
+    <button class="ghost" id="marketBack" hidden>⬅️ Zurück</button>
+  </header>
+  <div class="pagewrap">
+    <div id="marketGrid" class="grid2"></div>
+    <div id="marketHint" class="hint"></div>
+  </div>
+</section>
+
+<!-- EINKAUF -->
+<section id="shop" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">🛒 Einkaufsliste</h3>
+  </header>
+  <div class="pagewrap">
+    <div id="shopMissing"></div>
+    <div class="empty" id="shopEmpty" hidden>Aktuell fehlt nichts.</div>
+  </div>
+</section>
+
+<!-- ÜBERSICHT -->
+<section id="overview" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">📊 Übersicht</h3>
+  </header>
+  <div class="pagewrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input id="ovSearch" placeholder="Suche (Name, Notiz)..." style="flex:1;min-width:220px;padding:10px;border:1px solid var(--line);border-radius:10px">
+      <select id="ovPlace" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">Ort: alle</option></select>
+      <select id="ovCat" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">Kategorie: alle</option></select>
+      <select id="ovMarket" style="padding:10px;border:1px solid var(--line);border-radius:10px"><option value="">Markt: alle</option></select>
+    </div>
+    <div id="ovGrid" class="cards"></div>
+    <div id="ovEmpty" class="empty" hidden>Keine Treffer.</div>
+  </div>
+</section>
+
+<!-- KOCHBUCH – LISTE -->
+<section id="cookbook" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">📖 Kochbuch</h3>
+    <span style="flex:1"></span>
+    <input id="recSearch" placeholder="Suche Rezepte..." style="padding:10px;border:1px solid var(--line);border-radius:10px">
+    <button class="ghost" onclick="openRecipeDialog()">+ Rezept</button>
+  </header>
+  <div class="pagewrap">
+    <div id="recGrid" class="rec-grid"></div>
+    <div id="recEmpty" class="empty" hidden>Noch keine Rezepte.</div>
+  </div>
+</section>
+
+<!-- KOCHBUCH – DETAIL -->
+<section id="recipeDetail" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('cookbook')">⬅️ Zurück</button>
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 id="recTitleTop" style="margin:0">Rezept</h3>
+    <span style="flex:1"></span>
+    <button class="ghost" onclick="editCurrentRecipe()">✎ Bearbeiten</button>
+  </header>
+  <div class="pagewrap">
+    <div class="rec-section">
+      <div class="rec-head">
+        <img id="recImg" alt="">
+        <div>
+          <div id="recTitle" style="font-weight:800;font-size:20px;margin-bottom:6px"></div>
+          <div id="recTags" class="hint"></div>
+        </div>
+      </div>
+    </div>
+    <div class="rec-section">
+      <h4 style="margin:0 0 8px 0">Zutaten</h4>
+      <ul id="recIngs" class="ing-list"></ul>
+      <div class="rec-actions">
+        <span id="recBadgeHave" class="badge-ok" hidden>Vieles vorhanden</span>
+        <span id="recBadgeMiss" class="badge-missing" hidden>Es fehlt etwas</span>
+        <button class="ghost" onclick="addMissingToShopping()">Fehlende in Einkaufsliste</button>
+      </div>
+    </div>
+    <div class="rec-section">
+      <h4 style="margin:0 0 8px 0">Schritte</h4>
+      <div id="recSteps" class="rec-steps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Produkt-Dialog -->
+<dialog id="dlgItem">
+  <header><b id="dlgItemTitle">Produkt</b></header>
+  <form id="fItem" method="dialog">
+    <input type="hidden" name="id">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <input name="name" placeholder="Name (z. B. Mehl 405)" required>
+      <input name="imgUrl" placeholder="Bild-URL (optional)">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center">
+      <input type="file" name="imgFile" accept="image/*" capture="environment">
+      <img id="imgPreview" alt="" style="width:100%;max-height:120px;object-fit:cover;border:1px solid var(--line);border-radius:10px;background:#f3f4f6">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <input name="qty" type="number" placeholder="Menge" value="1">
+      <input name="unit" placeholder="Einheit (Stk, kg, L …)">
+      <input name="mhd" type="date" placeholder="MHD">
+    </div>
+    <div>
+      <label>Supermärkte (mehrere möglich):</label><br>
+      <div id="marketChecks" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px"></div>
+    </div>
+    <textarea name="notes" rows="2" placeholder="Notiz (optional)"></textarea>
+  </form>
+  <footer>
+    <button id="delItemBtn" class="btn btn-danger" hidden>🗑️ Löschen</button>
+    <button class="btn" onclick="dlgItem.close()">Abbrechen</button>
+    <button id="saveItemBtn" class="btn btn-primary">Speichern</button>
+  </footer>
+</dialog>
+
+<!-- Rezept-Dialog -->
+<dialog id="dlgRec">
+  <header><b id="dlgRecTitle">Rezept</b></header>
+  <form id="fRec" method="dialog">
+    <input type="hidden" name="id">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <input name="title" placeholder="Titel" required>
+      <input name="imgUrl" placeholder="Bild-URL (optional)">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center">
+      <input type="file" name="imgFile" accept="image/*" capture="environment">
+      <img id="recPreview" alt="" style="width:100%;max-height:120px;object-fit:cover;border:1px solid var(--line);border-radius:10px;background:#f3f4f6">
+    </div>
+    <textarea name="ingredients" rows="5" placeholder="Zutaten – eine pro Zeile (z. B. 500 g Mehl)"></textarea>
+    <textarea name="steps" rows="6" placeholder="Schritte/Anleitung"></textarea>
+    <input name="tags" placeholder="Tags (kommagetrennt, optional)">
+  </form>
+  <footer>
+    <button id="delRecBtn" class="btn btn-danger" hidden>🗑️ Löschen</button>
+    <button class="btn" onclick="dlgRec.close()">Abbrechen</button>
+    <button id="saveRecBtn" class="btn btn-primary">Speichern</button>
+  </footer>
+</dialog>
 
 <script>
 /* ===== Sprache ===== */
@@ -138,67 +333,87 @@ function setLang(code){const L=T[code]||T.de; langLabel.textContent=L.label; doc
 
 /* ===== Navigation ===== */
 function nav(id){
-  ["home","stock","stockCats"].forEach(x=>{const el=document.getElementById(x); if(el) el.hidden=true;});
+  ["home","stock","stockCats","stockItems","markets","shop","overview","cookbook","recipeDetail"].forEach(x=>{const el=document.getElementById(x); if(el) el.hidden=true;});
   const target=document.getElementById(id); if(target) target.hidden=false;
   window.scrollTo(0,0);
 }
+function backToCats(){ nav('stockCats'); }
 
-/* ===== Admin-Schalter ===== */
+/* ===== Admin / Inline-Edit (Home/Orte) ===== */
 let ADMIN = JSON.parse(localStorage.getItem('pantry_admin')||'false');
 let HOME_EDIT=-1, PLACE_EDIT=-1;
 const adminBtn=document.getElementById('adminBtn');
-adminBtn.onclick=()=>{
-  ADMIN=!ADMIN;
-  localStorage.setItem('pantry_admin', JSON.stringify(ADMIN));
-  HOME_EDIT=-1; PLACE_EDIT=-1; // Editoren schließen
-  renderHome(); renderStockPlaces();
-};
+adminBtn.onclick=()=>{ ADMIN=!ADMIN; localStorage.setItem('pantry_admin',JSON.stringify(ADMIN)); HOME_EDIT=-1; PLACE_EDIT=-1; renderHome(); renderStockPlaces(); };
 adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
 
-/* ===== Home-Kacheln ===== */
+/* ===== Daten: Kategorien & Märkte ===== */
+const ALL_CATS=[
+  {name:'Backwaren',icon:'🍞'},{name:'Getränke',icon:'🥤'},{name:'Süßwaren',icon:'🍫'},
+  {name:'Gewürze',icon:'🧂'},{name:'Konserven',icon:'🥫'},{name:'Nudeln/Reis',icon:'🍝'},
+  {name:'Öle/Essig',icon:'🫗'},{name:'Müsli/Frühstück',icon:'🥣'},{name:'Snacks/Chips',icon:'🥨'},
+  {name:'Backzutaten',icon:'🧁'},{name:'Reinigung',icon:'🧽'},{name:'Gemüse/Obst',icon:'🥬'},
+  {name:'Fleisch/Fisch',icon:'🥩'},{name:'Milchprodukte',icon:'🥛'},{name:'Tiefkühl',icon:'❄️'},
+  {name:'Sonstiges',icon:'📦'}
+];
+const MARKETS=[
+  'Lidl','Aldi','Kaufland','Rewe','Trinkgut','Penny','Netto','Türkischer Laden'
+];
+
+/* ===== IndexedDB (Items + Recipes) ===== */
+const DB_NAME='pantry-pad-v2', STORE_ITEMS='items', STORE_REC='recipes'; let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME,2);
+    r.onupgradeneeded=()=>{ const d=r.result;
+      if(!d.objectStoreNames.contains(STORE_ITEMS)) d.createObjectStore(STORE_ITEMS,{keyPath:'id'});
+      if(!d.objectStoreNames.contains(STORE_REC)) d.createObjectStore(STORE_REC,{keyPath:'id'});
+    };
+    r.onsuccess=()=>{db=r.result; res();};
+    r.onerror=()=>rej(r.error);
+  });
+}
+const osI=(m='readonly')=>db.transaction(STORE_ITEMS,m).objectStore(STORE_ITEMS);
+const osR=(m='readonly')=>db.transaction(STORE_REC,m).objectStore(STORE_REC);
+const putItem=i=>new Promise((res,rej)=>{const q=osI('readwrite').put(i); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const delItem=id=>new Promise((res,rej)=>{const q=osI('readwrite').delete(id); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const allItems=()=>new Promise((res,rej)=>{const q=osI().getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error);});
+const putRec=r=>new Promise((res,rej)=>{const q=osR('readwrite').put(r); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const delRec=id=>new Promise((res,rej)=>{const q=osR('readwrite').delete(id); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const allRecs=()=>new Promise((res,rej)=>{const q=osR().getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error);});
+
+/* ===== Helpers ===== */
+function daysUntil(ds){ if(!ds) return null; const n=new Date(); n.setHours(0,0,0,0); const d=new Date(ds+'T00:00:00'); return Math.floor((d-n)/86400000); }
+function byMHD(a,b){ const da=daysUntil(a.mhd), db=daysUntil(b.mhd); if(da===null&&db===null) return (a.name||'').localeCompare(b.name||''); if(da===null) return 1; if(db===null) return -1; return da-db; }
+
+/* ===== HOME-Kacheln ===== */
 const HOME_DEFAULT=[
   {id:'stock',    icon:'📦', title:'Bestand',     subtitle:'Produkte nach Ort',     action:'nav("stock")'},
-  {id:'markets',  icon:'🏪', title:'Supermärkte', subtitle:'Lidl, Aldi, REWE …',     action:'alert("Supermärkte – bald verfügbar")'},
-  {id:'shop',     icon:'🛒', title:'Einkauf',     subtitle:'Fehlendes abhaken',      action:'alert("Einkauf – bald verfügbar")'},
-  {id:'overview', icon:'📊', title:'Übersicht',   subtitle:'MHD & Statistiken',      action:'alert("Übersicht – bald verfügbar")'}
+  {id:'markets',  icon:'🏪', title:'Supermärkte', subtitle:'Lidl, Aldi, …',          action:'openMarkets()'},
+  {id:'shop',     icon:'🛒', title:'Einkauf',     subtitle:'Fehlendes abhaken',      action:'openShop()'},
+  {id:'overview', icon:'📊', title:'Übersicht',   subtitle:'MHD & Filter',           action:'openOverview()'},
+  {id:'cookbook', icon:'📖', title:'Kochbuch',    subtitle:'Rezepte & Zutaten',      action:'openCookbook()'}
 ];
 function loadHome(){ return JSON.parse(localStorage.getItem('home_tiles')||'null') || HOME_DEFAULT.slice(); }
 function saveHome(list){ localStorage.setItem('home_tiles', JSON.stringify(list)); }
-function deleteHomeTile(idx){
-  const tiles=loadHome(); if(tiles.length<=1){ alert('Mindestens 1 Kachel muss bleiben.'); return; }
-  if(confirm('Diese Kachel löschen?')){ tiles.splice(idx,1); saveHome(tiles); HOME_EDIT=-1; renderHome(); }
-}
-function addHomeTile(){
-  const tiles=loadHome();
-  tiles.push({id:'custom_'+Date.now(), icon:'⭐', title:'Neue Kachel', subtitle:'Untertitel', action:'alert("Platzhalter")'});
-  saveHome(tiles); renderHome();
-}
+function deleteHomeTile(idx){ const tiles=loadHome(); if(tiles.length<=1){alert('Mindestens 1 Kachel muss bleiben.');return;} if(confirm('Diese Kachel löschen?')){tiles.splice(idx,1); saveHome(tiles); HOME_EDIT=-1; renderHome();} }
+function addHomeTile(){ const tiles=loadHome(); tiles.push({id:'custom_'+Date.now(), icon:'⭐', title:'Neue Kachel', subtitle:'Untertitel', action:'alert("Platzhalter")'}); saveHome(tiles); renderHome(); }
+
 function renderHome(){
   const grid=document.getElementById('homeGrid'); grid.innerHTML='';
   const tiles=loadHome();
-
   tiles.forEach((t,idx)=>{
-    const card=document.createElement('div');
-    card.className='tile';
-    card.innerHTML=`<div class="icon">${t.icon||'🔲'}</div>
-                    <div class="twrap"><div class="tmain">${t.title||'Kachel'}</div>
-                    <div class="tmuted">${t.subtitle||''}</div></div>`;
-
-    // Navigation immer, außer wenn dieser Editor offen ist
+    const card=document.createElement('div'); card.className='tile';
+    card.innerHTML=`<div class="icon">${t.icon||'🔲'}</div><div class="twrap"><div class="tmain">${t.title||'Kachel'}</div><div class="tmuted">${t.subtitle||''}</div></div>`;
     card.onclick=()=>{ if(HOME_EDIT===idx) return; try{ eval(t.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
-
     if(ADMIN && HOME_EDIT!==idx){
       const bar=document.createElement('div'); bar.className='badgebar';
-      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
-      edit.onclick=(ev)=>{ev.stopPropagation(); HOME_EDIT=idx; renderHome();};
-      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
-      del.onclick=(ev)=>{ev.stopPropagation(); deleteHomeTile(idx);};
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.onclick=(ev)=>{ev.stopPropagation(); HOME_EDIT=idx; renderHome();};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.onclick=(ev)=>{ev.stopPropagation(); deleteHomeTile(idx);};
       bar.appendChild(edit); bar.appendChild(del); card.appendChild(bar);
     }
-
     if(ADMIN && HOME_EDIT===idx){
       const box=document.createElement('div'); box.className='editbox';
-      box.innerHTML=`<h4>Home-Kachel bearbeiten</h4>
+      box.innerHTML=`<h4>Kachel bearbeiten</h4>
         <div class="row"><label>Icon</label><input id="e_icon" value="${t.icon||''}"></div>
         <div class="row"><label>Titel</label><input id="e_title" value="${t.title||''}"></div>
         <div class="row"><label>Untertitel</label><input id="e_sub" value="${t.subtitle||''}"></div>
@@ -206,72 +421,40 @@ function renderHome(){
         <div class="actions"><button class="btn-sm" id="cancel">Abbrechen</button><button class="btn-sm btn-primary" id="save">Speichern</button></div>`;
       box.onclick=(ev)=>ev.stopPropagation();
       box.querySelector('#cancel').onclick=()=>{HOME_EDIT=-1; renderHome();};
-      box.querySelector('#save').onclick=()=>{
-        const tiles=loadHome();
-        tiles[idx]={...tiles[idx],
-          icon:box.querySelector('#e_icon').value.trim(),
-          title:box.querySelector('#e_title').value.trim(),
-          subtitle:box.querySelector('#e_sub').value.trim(),
-          action:box.querySelector('#e_act').value.trim()
-        };
-        saveHome(tiles); HOME_EDIT=-1; renderHome();
-      };
+      box.querySelector('#save').onclick=()=>{const list=loadHome(); list[idx]={...list[idx],icon:e_icon.value.trim(),title:e_title.value.trim(),subtitle:e_sub.value.trim(),action:e_act.value.trim()}; saveHome(list); HOME_EDIT=-1; renderHome();};
       card.appendChild(box);
     }
-
     grid.appendChild(card);
   });
-
-  if(ADMIN && HOME_EDIT===-1){
-    const add=document.createElement('button');
-    add.className='tile add-tile';
-    add.textContent='＋ Kachel hinzufügen';
-    add.onclick=(e)=>{e.stopPropagation(); addHomeTile();};
-    grid.appendChild(add);
-  }
+  if(ADMIN && HOME_EDIT===-1){ const add=document.createElement('button'); add.className='tile add-tile'; add.textContent='＋ Kachel hinzufügen'; add.onclick=(e)=>{e.stopPropagation(); addHomeTile();}; grid.appendChild(add); }
   adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
 }
 
-/* ===== Bestand → Orte (mit echtem openPlace) ===== */
+/* ===== Bestand → Orte ===== */
 const PLACES_DEFAULT=[
-  {id:'all',     icon:'📦', title:'Gesamtbestand',  subtitle:'Alles auf einmal',       action:'alert("Gesamtbestand – bald")'},
+  {id:'all',     icon:'📦', title:'Gesamtbestand',  subtitle:'Alles auf einmal',       action:'openOverview()'},
   {id:'pantry',  icon:'🗄️', title:'Vorratsschrank', subtitle:'Trockene Lebensmittel',  action:'openPlace("Vorratsschrank")'},
   {id:'freezer', icon:'❄️', title:'Gefriertruhe',    subtitle:'Tiefgekühltes',          action:'openPlace("Gefriertruhe")'},
   {id:'fridge',  icon:'🧊', title:'Kühlschrank',     subtitle:'Frische Ware',           action:'openPlace("Kühlschrank")'}
 ];
 function loadPlaces(){ return JSON.parse(localStorage.getItem('stock_places')||'null') || PLACES_DEFAULT.slice(); }
 function savePlaces(list){ localStorage.setItem('stock_places', JSON.stringify(list)); }
-function deletePlaceTile(idx){
-  const list=loadPlaces(); if(list.length<=1){ alert('Mindestens 1 Ort muss bleiben.'); return; }
-  if(confirm('Diesen Ort löschen?')){ list.splice(idx,1); savePlaces(list); PLACE_EDIT=-1; renderStockPlaces(); }
-}
-function addPlaceTile(){
-  const list=loadPlaces();
-  list.push({id:'place_'+Date.now(), icon:'🗂️', title:'Neuer Ort', subtitle:'Beschreibung', action:'openPlace("Neuer Ort")'});
-  savePlaces(list); renderStockPlaces();
-}
+function deletePlaceTile(idx){ const list=loadPlaces(); if(list.length<=1){alert('Mindestens 1 Ort muss bleiben.');return;} if(confirm('Diesen Ort löschen?')){list.splice(idx,1); savePlaces(list); PLACE_EDIT=-1; renderStockPlaces();} }
+function addPlaceTile(){ const list=loadPlaces(); list.push({id:'place_'+Date.now(), icon:'🗂️', title:'Neuer Ort', subtitle:'Beschreibung', action:'openPlace("Neuer Ort")'}); savePlaces(list); renderStockPlaces(); }
+
 function renderStockPlaces(){
   const grid=document.getElementById('stockGrid'); grid.innerHTML='';
   const places=loadPlaces();
-
   places.forEach((p,idx)=>{
-    const card=document.createElement('div');
-    card.className='tile';
-    card.innerHTML=`<span class="icon">${p.icon||'📦'}</span>
-                    <div class="twrap"><div class="tmain">${p.title||''}</div>
-                    <div class="tmuted">${p.subtitle||''}</div></div>`;
-
+    const card=document.createElement('div'); card.className='tile';
+    card.innerHTML=`<span class="icon">${p.icon||'📦'}</span><div class="twrap"><div class="tmain">${p.title||''}</div><div class="tmuted">${p.subtitle||''}</div></div>`;
     card.onclick=()=>{ if(PLACE_EDIT===idx) return; try{ eval(p.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
-
     if(ADMIN && PLACE_EDIT!==idx){
       const bar=document.createElement('div'); bar.className='badgebar';
-      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
-      edit.onclick=(ev)=>{ev.stopPropagation(); PLACE_EDIT=idx; renderStockPlaces();};
-      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
-      del.onclick=(ev)=>{ev.stopPropagation(); deletePlaceTile(idx);};
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.onclick=(ev)=>{ev.stopPropagation(); PLACE_EDIT=idx; renderStockPlaces();};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.onclick=(ev)=>{ev.stopPropagation(); deletePlaceTile(idx);};
       bar.appendChild(edit); bar.appendChild(del); card.appendChild(bar);
     }
-
     if(ADMIN && PLACE_EDIT===idx){
       const box=document.createElement('div'); box.className='editbox';
       box.innerHTML=`<h4>Ort bearbeiten</h4>
@@ -282,68 +465,287 @@ function renderStockPlaces(){
         <div class="actions"><button class="btn-sm" id="cancel">Abbrechen</button><button class="btn-sm btn-primary" id="save">Speichern</button></div>`;
       box.onclick=(ev)=>ev.stopPropagation();
       box.querySelector('#cancel').onclick=()=>{PLACE_EDIT=-1; renderStockPlaces();};
-      box.querySelector('#save').onclick=()=>{
-        const list=loadPlaces();
-        list[idx]={...list[idx],
-          icon:box.querySelector('#p_icon').value.trim(),
-          title:box.querySelector('#p_title').value.trim(),
-          subtitle:box.querySelector('#p_sub').value.trim(),
-          action:box.querySelector('#p_act').value.trim()
-        };
-        savePlaces(list); PLACE_EDIT=-1; renderStockPlaces();
-      };
+      box.querySelector('#save').onclick=()=>{const list=loadPlaces(); list[idx]={...list[idx],icon:p_icon.value.trim(),title:p_title.value.trim(),subtitle:p_sub.value.trim(),action:p_act.value.trim()}; savePlaces(list); PLACE_EDIT=-1; renderStockPlaces();};
       card.appendChild(box);
     }
-
     grid.appendChild(card);
   });
-
-  if(ADMIN && PLACE_EDIT===-1){
-    const add=document.createElement('button');
-    add.className='tile add-tile';
-    add.textContent='＋ Ort hinzufügen';
-    add.onclick=(e)=>{e.stopPropagation(); addPlaceTile();};
-    grid.appendChild(add);
-  }
+  if(ADMIN && PLACE_EDIT===-1){ const add=document.createElement('button'); add.className='tile add-tile'; add.textContent='＋ Ort hinzufügen'; add.onclick=(e)=>{e.stopPropagation(); addPlaceTile();}; grid.appendChild(add); }
   adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten';
 }
 
-/* ===== Kategorien (SB-Kasse-Stil) ===== */
-const ALL_CATS=[
-  {name:'Backwaren',icon:'🍞'},
-  {name:'Getränke',icon:'🥤'},
-  {name:'Süßwaren',icon:'🍫'},
-  {name:'Gewürze',icon:'🧂'},
-  {name:'Konserven',icon:'🥫'},
-  {name:'Nudeln/Reis',icon:'🍝'},
-  {name:'Öle/Essig',icon:'🫗'},
-  {name:'Müsli/Frühstück',icon:'🥣'},
-  {name:'Snacks/Chips',icon:'🥨'},
-  {name:'Backzutaten',icon:'🧁'},
-  {name:'Reinigung',icon:'🧽'},
-  {name:'Gemüse/Obst',icon:'🥬'},
-  {name:'Fleisch/Fisch',icon:'🥩'},
-  {name:'Milchprodukte',icon:'🥛'},
-  {name:'Tiefkühl',icon:'❄️'},
-  {name:'Sonstiges',icon:'📦'}
-];
-let CURRENT_PLACE='';
+/* ===== Kategorien / Produkte ===== */
+let CURRENT_PLACE='', CURRENT_CAT='';
 function openPlace(place){
-  CURRENT_PLACE=place;
-  document.getElementById('placeTitle').textContent='📍 '+place;
+  CURRENT_PLACE=place; document.getElementById('placeTitle').textContent='📍 '+place;
   const grid=document.getElementById('catGrid'); grid.innerHTML='';
-  ALL_CATS.forEach(c=>{
-    const card=document.createElement('div');
-    card.className='catcard';
-    card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
-    card.onclick=()=>alert(`Kategorie „${c.name}“ in „${place}“ – Produktliste kommt als Nächstes`);
-    grid.appendChild(card);
-  });
+  ALL_CATS.forEach(c=>{ const card=document.createElement('div'); card.className='catcard'; card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`; card.onclick=()=>openItems(place,c.name); grid.appendChild(card); });
   nav('stockCats');
 }
+const itemsGrid=document.getElementById('itemsGrid'), itemsEmpty=document.getElementById('itemsEmpty'), itemsTitle=document.getElementById('itemsTitle');
+function openItems(place,cat){ CURRENT_PLACE=place; CURRENT_CAT=cat; itemsTitle.textContent=`📍 ${place} · ${cat}`; renderItems().then(()=>nav('stockItems')); }
+function statusRibbon(it){ const d=daysUntil(it.mhd); if(d===null) return ['ohne MHD','r-ok']; if(d<0) return ['abgelaufen','r-bad']; if(d<=14) return [`${d} Tage`,'r-warn']; return [`${d} Tage`,'r-ok']; }
+async function renderItems(){
+  const all=await allItems(); const list=all.filter(i=>i.place===CURRENT_PLACE && i.cat===CURRENT_CAT).sort(byMHD);
+  itemsGrid.innerHTML=''; itemsEmpty.hidden=list.length>0;
+  list.forEach(it=>{ const [txt,cls]=statusRibbon(it);
+    const card=document.createElement('div'); card.className='card';
+    const iw=document.createElement('div'); iw.className='imgwrap';
+    const img=document.createElement('img'); img.src=it.imgUrl||''; img.onerror=()=>img.src='https://via.placeholder.com/600?text=%F0%9F%93%A6'; iw.appendChild(img); card.appendChild(iw);
+    const rb=document.createElement('div'); rb.className=`ribbon ${cls}`; rb.textContent=txt; card.appendChild(rb);
+    const body=document.createElement('div'); body.className='body'; body.innerHTML=`<div class="name">${it.name}</div><div class="meta">${it.qty||0} ${it.unit||''} · MHD: ${it.mhd||'—'}</div>`; card.appendChild(body);
+    card.onclick=()=>openItemDialog(it); itemsGrid.appendChild(card);
+  });
+}
 
-/* ===== Init ===== */
-renderHome(); renderStockPlaces();
+/* ===== Produkt-Dialog (inkl. Markets & Foto) ===== */
+const dlgItem=document.getElementById('dlgItem'), fItem=document.getElementById('fItem');
+const delItemBtn=document.getElementById('delItemBtn'), saveItemBtn=document.getElementById('saveItemBtn'), dlgItemTitle=document.getElementById('dlgItemTitle');
+const imgPreview=document.getElementById('imgPreview');
+const marketChecks=document.getElementById('marketChecks');
+MARKETS.forEach(m=>{ const id='mk_'+m.replace(/\s/g,'_'); const wrap=document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='6px';
+  wrap.innerHTML=`<input type="checkbox" value="${m}" id="${id}"><span>${m}</span>`; marketChecks.appendChild(wrap);
+});
+function fileToDataURL(file){ return new Promise((res,rej)=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(file);}); }
+fItem.imgFile.addEventListener('change', async ()=>{
+  const f=fItem.imgFile.files?.[0]; if(!f) return; try{ const data=await fileToDataURL(f); fItem.imgUrl.value=data; imgPreview.src=data; }catch(e){ alert('Bild konnte nicht geladen werden.'); }
+});
+fItem.imgUrl.addEventListener('input', ()=>{ imgPreview.src=fItem.imgUrl.value.trim(); });
+
+function openItemDialog(it){
+  fItem.reset(); delItemBtn.hidden=true; dlgItemTitle.textContent='Produkt hinzufügen'; imgPreview.src='';
+  marketChecks.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+  if(it){
+    dlgItemTitle.textContent='Produkt bearbeiten'; delItemBtn.hidden=false;
+    fItem.id.value=it.id; fItem.name.value=it.name||''; fItem.imgUrl.value=it.imgUrl||''; imgPreview.src=it.imgUrl||'';
+    fItem.qty.value=it.qty||0; fItem.unit.value=it.unit||''; fItem.mhd.value=it.mhd||''; fItem.notes.value=it.notes||'';
+    (it.markets||[]).forEach(m=>{ const el=marketChecks.querySelector(`input[value="${m}"]`); if(el) el.checked=true; });
+    delItemBtn.onclick=async()=>{ if(confirm('Wirklich löschen?')){ await delItem(it.id); dlgItem.close(); renderItems(); } };
+  } else { delItemBtn.onclick=null; }
+  dlgItem.showModal();
+}
+saveItemBtn.onclick=async()=>{
+  const ms=[...marketChecks.querySelectorAll('input:checked')].map(c=>c.value);
+  const item={
+    id: fItem.id.value || crypto.randomUUID(),
+    name: (fItem.name.value||'').trim(),
+    imgUrl: (fItem.imgUrl.value||'').trim(),
+    qty: Number(fItem.qty.value||0),
+    unit: (fItem.unit.value||'').trim(),
+    mhd: fItem.mhd.value||'',
+    notes: (fItem.notes.value||'').trim(),
+    place: CURRENT_PLACE, cat: CURRENT_CAT,
+    markets: ms
+  };
+  if(!item.name){ alert('Name fehlt'); return; }
+  await putItem(item); dlgItem.close(); renderItems();
+};
+
+/* ===== Supermärkte (Logos → Kategorien → Produkte) ===== */
+let M_STAGE='logos', M_ACTIVE='', M_CAT='';
+const marketGrid=document.getElementById('marketGrid'), marketBack=document.getElementById('marketBack'), marketHint=document.getElementById('marketHint');
+function openMarkets(){ M_STAGE='logos'; M_ACTIVE=''; M_CAT=''; renderMarkets(); nav('markets'); }
+marketBack.onclick=()=>{ if(M_STAGE==='cats'){M_STAGE='logos';} else if(M_STAGE==='items'){M_STAGE='cats';} renderMarkets(); };
+function renderMarkets(){
+  marketGrid.innerHTML=''; marketHint.textContent=''; marketBack.hidden=(M_STAGE==='logos');
+  if(M_STAGE==='logos'){
+    MARKETS.forEach(m=>{ const card=document.createElement('div'); card.className='tile'; card.innerHTML=`<div class="icon">🏪</div><div class="twrap"><div class="tmain">${m}</div><div class="tmuted">Kategorien ansehen</div></div>`;
+      card.onclick=()=>{M_ACTIVE=m; M_STAGE='cats'; renderMarkets();}; marketGrid.appendChild(card); });
+  } else if(M_STAGE==='cats'){
+    ALL_CATS.forEach(c=>{ const card=document.createElement('div'); card.className='catcard'; card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
+      card.onclick=()=>{M_CAT=c.name; M_STAGE='items'; renderMarkets();}; marketGrid.appendChild(card); });
+    marketHint.textContent=`${M_ACTIVE} → Kategorie wählen`;
+  } else if(M_STAGE==='items'){
+    allItems().then(list=>{
+      const filtered=list.filter(i=>(i.markets||[]).includes(M_ACTIVE) && i.cat===M_CAT).sort(byMHD);
+      if(filtered.length===0){ marketGrid.innerHTML='<div class="empty">Keine Produkte in dieser Auswahl.</div>'; return; }
+      filtered.forEach(it=>{
+        const d=daysUntil(it.mhd); let cls='r-ok', txt='ohne MHD';
+        if(d!==null){ if(d<0){cls='r-bad';txt='abgelaufen';} else if(d<=14){cls='r-warn';txt=`${d} Tage`;} else {cls='r-ok';txt=`${d} Tage`;} }
+        const card=document.createElement('div'); card.className='card';
+        card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/600?text=%F0%9F%93%A6'"></div>
+                        <div class="ribbon ${cls}">${txt}</div>
+                        <div class="body"><div class="name">${it.name}</div><div class="meta">${it.qty||0} ${it.unit||''} · MHD: ${it.mhd||'—'}</div></div>`;
+        card.onclick=()=>openItemDialog(it);
+        marketGrid.appendChild(card);
+      });
+      marketHint.textContent=`${M_ACTIVE} · ${M_CAT}`;
+    });
+  }
+}
+
+/* ===== Einkaufsliste ===== */
+async function openShop(){
+  nav('shop');
+  const list=(await allItems()).filter(i=>(i.qty||0)===0);
+  const wrap=document.getElementById('shopMissing'), empty=document.getElementById('shopEmpty');
+  wrap.innerHTML=''; empty.hidden=list.length>0;
+  if(list.length===0) return;
+  const groups={}; list.forEach(i=>{ const key=(i.markets && i.markets[0]) || 'Allgemein'; (groups[key]=groups[key]||[]).push(i); });
+  Object.entries(groups).forEach(([market,arr])=>{
+    const box=document.createElement('div'); box.className='card'; box.style.padding='12px';
+    box.innerHTML=`<b>${market}</b>`;
+    arr.forEach(it=>{
+      const row=document.createElement('div'); row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px'; row.style.marginTop='8px';
+      row.innerHTML=`<img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/40'" style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #eee">
+                     <span style="flex:1">${it.name}</span>`;
+      const btn=document.createElement('button'); btn.className='btn'; btn.textContent='✅ Gekauft';
+      btn.onclick=async()=>{ it.qty=1; await putItem(it); openShop(); };
+      row.appendChild(btn); box.appendChild(row);
+    });
+    wrap.appendChild(box);
+  });
+}
+
+/* ===== Übersicht (Suche + Filter) ===== */
+async function openOverview(){
+  nav('overview');
+  const ovPlace=document.getElementById('ovPlace'), ovCat=document.getElementById('ovCat'), ovMarket=document.getElementById('ovMarket');
+  ovPlace.innerHTML=`<option value="">Ort: alle</option>`+['Vorratsschrank','Gefriertruhe','Kühlschrank','Neuer Ort'].map(x=>`<option>${x}</option>`).join('');
+  ovCat.innerHTML=`<option value="">Kategorie: alle</option>`+ALL_CATS.map(c=>`<option>${c.name}</option>`).join('');
+  ovMarket.innerHTML=`<option value="">Markt: alle</option>`+MARKETS.map(m=>`<option>${m}</option>`).join('');
+  ['ovSearch','ovPlace','ovCat','ovMarket'].forEach(id=>document.getElementById(id).oninput=renderOverview);
+  renderOverview();
+}
+async function renderOverview(){
+  const term=(document.getElementById('ovSearch').value||'').toLowerCase();
+  const p=document.getElementById('ovPlace').value, c=document.getElementById('ovCat').value, m=document.getElementById('ovMarket').value;
+  const list=(await allItems()).filter(it=>{
+    if(p && it.place!==p) return false;
+    if(c && it.cat!==c) return false;
+    if(m && !(it.markets||[]).includes(m)) return false;
+    const hay=[it.name,it.notes].filter(Boolean).join(' ').toLowerCase();
+    return !term || hay.includes(term);
+  }).sort(byMHD);
+  const grid=document.getElementById('ovGrid'), empty=document.getElementById('ovEmpty');
+  grid.innerHTML=''; empty.hidden=list.length>0;
+  list.forEach(it=>{
+    const d=daysUntil(it.mhd); let cls='r-ok', txt='ohne MHD';
+    if(d!==null){ if(d<0){cls='r-bad';txt='abgelaufen';} else if(d<=14){cls='r-warn';txt=`${d} Tage`;} else {cls='r-ok';txt=`${d} Tage`;} }
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/600?text=%F0%9F%93%A6'"></div>
+                    <div class="ribbon ${cls}">${txt}</div>
+                    <div class="body"><div class="name">${it.name}</div><div class="meta">${it.place} · ${it.cat} · ${it.qty||0} ${it.unit||''}</div></div>`;
+    card.onclick=()=>{ CURRENT_PLACE=it.place; CURRENT_CAT=it.cat; openItemDialog(it); };
+    grid.appendChild(card);
+  });
+}
+
+/* ===== Kochbuch ===== */
+function openCookbook(){ nav('cookbook'); renderRecipes(); }
+const recGrid=document.getElementById('recGrid'), recEmpty=document.getElementById('recEmpty'), recSearch=document.getElementById('recSearch');
+recSearch.oninput=renderRecipes;
+
+async function renderRecipes(){
+  const term=(recSearch.value||'').toLowerCase();
+  const items=await allItems();
+  const list=(await allRecs()).filter(r=>!term || (r.title||'').toLowerCase().includes(term) || (r.tags||'').toLowerCase().includes(term));
+  recGrid.innerHTML=''; recEmpty.hidden=list.length>0;
+  list.forEach(r=>{
+    const haveRatio = recipeHaveRatio(r, items);
+    const card=document.createElement('div'); card.className='rec-card';
+    card.innerHTML=`<div class="imgwrap"><img src="${r.imgUrl||''}" onerror="this.src='https://via.placeholder.com/800x500?text=%F0%9F%8D%B4'"></div>
+                    <div class="body"><div class="title">${r.title}</div>
+                    <div class="hint">${r.tags||''}</div>
+                    <div class="rec-actions">
+                      <span class="${haveRatio>=0.5?'badge-ok':'badge-missing'}">${Math.round(haveRatio*100)}% vorhanden</span>
+                    </div></div>`;
+    card.onclick=()=>openRecipeDetail(r.id);
+    recGrid.appendChild(card);
+  });
+}
+function recipeHaveRatio(r, items){
+  const ings=(r.ingredients||[]); if(!ings.length) return 1;
+  let have=0;
+  ings.forEach(line=>{
+    const name=line.replace(/^\d+.*?\s/,'').toLowerCase();
+    const match=items.find(i=>(i.name||'').toLowerCase().includes(name) && (i.qty||0)>0);
+    if(match) have++;
+  });
+  return have/ings.length;
+}
+
+/* Rezept-Dialog / CRUD */
+const dlgRec=document.getElementById('dlgRec'), fRec=document.getElementById('fRec');
+const dlgRecTitle=document.getElementById('dlgRecTitle'), delRecBtn=document.getElementById('delRecBtn'), saveRecBtn=document.getElementById('saveRecBtn'), recPreview=document.getElementById('recPreview');
+function fileToDataURL(file){ return new Promise((res,rej)=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(file);}); }
+fRec.imgFile.addEventListener('change', async ()=>{ const f=fRec.imgFile.files?.[0]; if(!f) return; const data=await fileToDataURL(f); fRec.imgUrl.value=data; recPreview.src=data; });
+fRec.imgUrl.addEventListener('input', ()=>{ recPreview.src=fRec.imgUrl.value.trim(); });
+
+function openRecipeDialog(r){
+  fRec.reset(); delRecBtn.hidden=true; dlgRecTitle.textContent='Rezept hinzufügen'; recPreview.src='';
+  if(r){
+    dlgRecTitle.textContent='Rezept bearbeiten'; delRecBtn.hidden=false;
+    fRec.id.value=r.id; fRec.title.value=r.title||''; fRec.imgUrl.value=r.imgUrl||''; recPreview.src=r.imgUrl||'';
+    fRec.ingredients.value=(r.ingredients||[]).join('\n'); fRec.steps.value=r.steps||''; fRec.tags.value=r.tags||'';
+    delRecBtn.onclick=async()=>{ if(confirm('Rezept löschen?')){ await delRec(r.id); dlgRec.close(); renderRecipes(); } };
+  } else { delRecBtn.onclick=null; }
+  dlgRec.showModal();
+}
+saveRecBtn.onclick=async()=>{
+  const rec={
+    id: fRec.id.value || crypto.randomUUID(),
+    title: (fRec.title.value||'').trim(),
+    imgUrl: (fRec.imgUrl.value||'').trim(),
+    ingredients: (fRec.ingredients.value||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    steps: (fRec.steps.value||'').trim(),
+    tags: (fRec.tags.value||'').trim()
+  };
+  if(!rec.title){ alert('Titel fehlt'); return; }
+  await putRec(rec); dlgRec.close(); renderRecipes();
+};
+
+/* Rezept-Detail */
+let CURRENT_RECIPE=null;
+async function openRecipeDetail(id){
+  const list=await allRecs(); const r=list.find(x=>x.id===id); if(!r) return;
+  CURRENT_RECIPE=r; document.getElementById('recTitleTop').textContent=r.title;
+  document.getElementById('recImg').src=r.imgUrl||''; document.getElementById('recTitle').textContent=r.title; document.getElementById('recTags').textContent=r.tags||'';
+  const items=await allItems();
+  const ul=document.getElementById('recIngs'); ul.innerHTML='';
+  let have=0, total=(r.ingredients||[]).length;
+  (r.ingredients||[]).forEach(line=>{
+    const name=line.replace(/^\d+.*?\s/,'').toLowerCase();
+    const match=items.find(i=>(i.name||'').toLowerCase().includes(name));
+    const li=document.createElement('li'); li.innerHTML=`<span class="ing-name">${line}</span>`;
+    const st=document.createElement('span'); st.className='ing-status';
+    if(match && (match.qty||0)>0){ have++; st.textContent='✔︎ vorhanden'; st.style.color='#0a7a3a'; }
+    else { st.textContent='✖︎ fehlt'; st.style.color='#8a1a1a'; }
+    li.appendChild(st); ul.appendChild(li);
+  });
+  document.getElementById('recBadgeHave').hidden = !(have>=Math.ceil(total/2));
+  document.getElementById('recBadgeMiss').hidden = have>=total;
+  document.getElementById('recSteps').textContent=r.steps||'';
+  nav('recipeDetail');
+}
+function editCurrentRecipe(){ if(CURRENT_RECIPE) openRecipeDialog(CURRENT_RECIPE); }
+async function addMissingToShopping(){
+  if(!CURRENT_RECIPE) return;
+  const items=await allItems();
+  for(const line of (CURRENT_RECIPE.ingredients||[])){
+    const name=line.replace(/^\d+.*?\s/,'').trim();
+    const found=items.find(i=>(i.name||'').toLowerCase().includes(name.toLowerCase()));
+    if(!found){
+      await putItem({
+        id: crypto.randomUUID(),
+        name: name,
+        imgUrl: '',
+        qty: 0, unit:'', mhd:'',
+        notes: 'von Rezept',
+        place:'Vorratsschrank', cat:'Sonstiges',
+        markets:[]
+      });
+    }
+  }
+  alert('Fehlende Zutaten wurden zur Einkaufsliste (Menge 0) hinzugefügt.');
+}
+
+/* ===== INIT ===== */
+(async ()=>{
+  await openDB();
+  renderHome();
+  renderStockPlaces();
+})();
 </script>
 </body>
 </html>
