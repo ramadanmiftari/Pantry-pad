@@ -98,80 +98,6 @@ dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex
   </div>
 </section>
 
-<!-- SHOPPING -->
-<section id="shopPage" class="page" hidden>
-  <header>
-    <button class="ghost" onclick="go('home')">🏠</button>
-    <h1 style="margin:0 8px">🛒 Einkaufsliste</h1>
-  </header>
-
-  <div class="stat">
-    <b>❌ Fehlend</b>
-    <div id="shopMissing"></div>
-  </div>
-
-  <div class="stat">
-    <b>🛒 Warenkorb</b>
-    <div id="shopCart"></div>
-  </div>
-</section> 
-  /* ==== Shopping (mit Warenkorb) ==== */
-async function renderShop(){
-  const all = await getAll();
-  const missing = all.filter(it => (it.qty||0) === 0);
-
-  const shopMissing = document.getElementById('shopMissing');
-  const shopCart = document.getElementById('shopCart');
-
-  shopMissing.innerHTML = '';
-  shopCart.innerHTML = '';
-
-  if(missing.length === 0){
-    shopMissing.innerHTML = '<div>Alles da ✅</div>';
-    return;
-  }
-
-  missing.forEach(it => {
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '10px';
-    row.style.marginTop = '8px';
-
-    row.innerHTML = `
-      <img src="${it.imgUrl||''}" 
-           onerror="this.src='https://via.placeholder.com/40'" 
-           style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #eee">
-      <span style="flex:1">${it.name}</span>
-    `;
-
-    // Toggle für Warenkorb
-    const toggle = document.createElement('input');
-    toggle.type = 'checkbox';
-    toggle.onchange = () => {
-      if(toggle.checked){
-        // in Warenkorb verschieben
-        const cRow = row.cloneNode(true);
-        cRow.querySelector('input')?.remove(); // kein Toggle im Warenkorb
-        const btn = document.createElement('button');
-        btn.textContent = "✅ Gekauft";
-        btn.className = "ghost2";
-        btn.onclick = async () => {
-          it.qty = 1; // wieder verfügbar
-          await put(it);
-          renderShop(); // neu rendern
-          renderInventory();
-        };
-        cRow.appendChild(btn);
-        shopCart.appendChild(cRow);
-        row.remove();
-      }
-    };
-
-    row.appendChild(toggle);
-    shopMissing.appendChild(row);
-  });
-}
 
 <!-- DASHBOARD -->
 <section id="dashPage" class="page" hidden>
@@ -319,24 +245,60 @@ async function renderInventory(){
   }
 }
 
-/* ====== Shopping ====== */
+  /* ==== Shopping (mit Warenkorb) ==== */
 async function renderShop(){
-  const all=await getAll(); const needs=all.filter(it=>(it.qty||0)===0);
-  if(needs.length===0){ shopList.innerHTML='<div class="stat">Alles da ✅</div>'; return; }
-  const groups={}; for(const it of needs){ const m=it.market||'Allgemein'; (groups[m]=groups[m]||[]).push(it); }
-  shopList.innerHTML='';
-  for(const [market,arr] of Object.entries(groups)){
-    const box=document.createElement('div'); box.className='stat';
-    box.innerHTML=`<b>${market}</b>`;
-    arr.forEach(it=>{
-      const row=document.createElement('div'); row.style.display='flex'; row.style.alignItems='center'; row.style.gap='10px'; row.style.marginTop='8px';
-      row.innerHTML=`<img src="${it.imgUrl||''}" onerror="this.src=''" style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #eee"> ${it.name}`;
-      const ok=document.createElement('button'); ok.className='ghost2'; ok.textContent='✅ gekauft';
-      ok.onclick=async()=>{ it.qty=1; await put(it); renderShop(); renderInventory(); };
-      row.appendChild(ok); box.appendChild(row);
-    });
-    shopList.appendChild(box);
+  const all = await getAll();
+  const missing = all.filter(it => (it.qty||0) === 0);
+
+  const shopMissing = document.getElementById('shopMissing');
+  const shopCart = document.getElementById('shopCart');
+
+  shopMissing.innerHTML = '';
+  shopCart.innerHTML = '';
+
+  if(missing.length === 0){
+    shopMissing.innerHTML = '<div>Alles da ✅</div>';
+    return;
   }
+
+  missing.forEach(it => {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.alignItems = 'center';
+    row.style.gap = '10px';
+    row.style.marginTop = '8px';
+
+    row.innerHTML = `
+      <img src="${it.imgUrl||''}" 
+           onerror="this.src='https://via.placeholder.com/40'" 
+           style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #eee">
+      <span style="flex:1">${it.name}</span>
+    `;
+
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.onchange = () => {
+      if(toggle.checked){
+        const cRow = row.cloneNode(true);
+        cRow.querySelector('input')?.remove();
+        const btn = document.createElement('button');
+        btn.textContent = "✅ Gekauft";
+        btn.className = "ghost2";
+        btn.onclick = async () => {
+          it.qty = 1;
+          await put(it);
+          renderShop();
+          renderInventory();
+        };
+        cRow.appendChild(btn);
+        shopCart.appendChild(cRow);
+        row.remove();
+      }
+    };
+
+    row.appendChild(toggle);
+    shopMissing.appendChild(row);
+  });
 }
 
 /* ====== Dashboard ====== */
