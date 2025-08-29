@@ -12,19 +12,14 @@ button{cursor:pointer}
 
 /* HOME */
 .home{min-height:100vh;display:grid;gap:22px;place-content:center;padding:26px;background:linear-gradient(135deg,#6a5cff,#20c997);color:#fff;text-align:center}
-.topbar{display:flex;justify-content:center;margin-bottom:6px}
 .choices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));width:min(900px,96vw);margin:0 auto}
 .choice{display:flex;align-items:center;gap:12px;padding:18px;border-radius:16px;border:none;background:#fff;color:#222;box-shadow:var(--shadow);font-size:1.05rem}
 .choice .icon{font-size:1.6rem}
-.choice.view{border-left:10px solid var(--brand2)}
-.choice.shop{border-left:10px solid #ff7ab6}
-.choice.dash{border-left:10px solid #66d9e8}
-.choice.market{border-left:10px solid #ffd43b}
 
 /* HEADER */
 header{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;box-shadow:var(--shadow);position:sticky;top:0;z-index:5}
 header h1{margin:0;font-size:1.1rem}
-header input,header select{padding:8px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
+header input{padding:8px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
 header .ghost{background:#fff;color:#333;border:1px solid var(--line);padding:8px 12px;border-radius:10px}
 header .primary{background:var(--brand);color:#fff;border:none;padding:8px 12px;border-radius:10px}
 
@@ -33,17 +28,17 @@ header .primary{background:var(--brand);color:#fff;border:none;padding:8px 12px;
 aside{background:#fff;border-right:1px solid var(--line);padding:12px}
 .aside-title{font-weight:700;margin:4px 0 10px}
 .cat-list{display:flex;flex-direction:column;gap:8px}
-.cat{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
-.cat.active{background:#eaf2ff;border-color:#bcd4ff;font-weight:700}
+.cat{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fafafa;cursor:pointer}
+.cat.active{background:#eaf2ff;border-color:#6a5cff;font-weight:700}
 main{padding:14px}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
-.tile{position:relative;background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+.tile{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line);cursor:pointer}
 .imgwrap{width:100%;aspect-ratio:1/1;background:#eee;display:grid;place-items:center;overflow:hidden}
 .tile img{width:100%;height:100%;object-fit:cover}
 .body{padding:12px}
 .name{font-weight:800}
 .meta{font-size:.92rem;color:#555;margin-top:4px}
-.ribbon{position:absolute;top:10px;left:10px;background:#fff3cd;color:#7a4e00;padding:6px 8px;border-radius:10px;font-size:.8rem}
+.ribbon{position:absolute;top:10px;left:10px;background:#fff3cd;color:#7a4e00;padding:4px 6px;border-radius:8px;font-size:.8rem}
 .ribbon.exp{background:#fde2e0;color:#8b1a1a}
 .empty{padding:40px;text-align:center;color:#777}
 
@@ -54,10 +49,9 @@ main{padding:14px}
 /* DIALOG */
 dialog{width:min(560px,96vw);border:none;border-radius:16px;padding:0;box-shadow:var(--shadow)}
 dialog header,dialog footer{padding:12px 16px}
-dialog header{border-bottom:1px solid var(--line)}
 dialog form{padding:16px;display:grid;gap:10px}
-dialog input,dialog select,dialog textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
-dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+dialog input,dialog select{padding:10px;border:1px solid var(--line);border-radius:10px}
+dialog footer{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--line)}
 .primary{background:var(--brand2);color:#fff;border:none;padding:10px 12px;border-radius:10px}
 .ghost2{background:#fff;border:1px solid var(--line);padding:10px 12px;border-radius:10px}
 .danger{background:var(--danger);color:#fff;border:none;padding:10px 12px;border-radius:10px}
@@ -67,19 +61,17 @@ dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex
 
 <!-- HOME -->
 <section id="home" class="home">
-  <div class="topbar"></div>
   <h1>👋 Willkommen im Pantry Pad</h1>
-  <p>Bitte wähle:</p>
   <div class="choices">
-    <button class="choice view"   onclick="go('inventory')"><span class="icon">👀</span><span><b>Nachschauen</b><br><small>Produkte ansehen</small></span></button>
-    <button class="choice shop"   onclick="go('shop')"><span class="icon">🛒</span><span><b>Einkaufsliste</b><br><small>Fehlendes abhaken</small></span></button>
-    <button class="choice dash"   onclick="go('dashboard')"><span class="icon">📊</span><span><b>Dashboard</b><br><small>Überblick & Warnungen</small></span></button>
-    <button class="choice market" onclick="go('markets')"><span class="icon">🏪</span><span><b>Supermärkte</b><br><small>Logo → Kategorie → Produkte</small></span></button>
+    <button class="choice" onclick="go('inventory')"><span class="icon">👀</span>Nachschauen</button>
+    <button class="choice" onclick="go('shop')"><span class="icon">🛒</span>Einkaufsliste</button>
+    <button class="choice" onclick="go('dashboard')"><span class="icon">📊</span>Dashboard</button>
+    <button class="choice" onclick="go('markets')"><span class="icon">🏪</span>Supermärkte</button>
   </div>
 </section>
 
-<!-- INVENTORY (SB: Kategorien links, Produkte rechts) -->
-<section id="inventoryPage" hidden>
+<!-- INVENTORY -->
+<section id="inventory" hidden>
   <header>
     <button class="ghost" onclick="go('home')">🏠</button>
     <h1 style="margin-right:auto">📦 Nachschauen</h1>
@@ -98,59 +90,40 @@ dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex
   </div>
 </section>
 
+<!-- SHOP -->
+<section id="shop" class="page" hidden>
+  <header><button class="ghost" onclick="go('home')">🏠</button><h1>🛒 Einkaufsliste</h1></header>
+  <div class="stat"><b>❌ Fehlend</b><div id="shopMissing"></div></div>
+  <div class="stat"><b>🛒 Warenkorb</b><div id="shopCart"></div></div>
+</section>
 
 <!-- DASHBOARD -->
-<section id="dashPage" class="page" hidden>
-  <header>
-    <button class="ghost" onclick="go('home')">🏠</button>
-    <h1 style="margin:0 8px">📊 Dashboard</h1>
-  </header>
+<section id="dashboard" class="page" hidden>
+  <header><button class="ghost" onclick="go('home')">🏠</button><h1>📊 Dashboard</h1></header>
   <div class="stat"><b>⚠️ Bald ablaufend</b><div id="soonList"></div></div>
   <div class="stat"><b>❌ Abgelaufen</b><div id="expList"></div></div>
   <div class="stat"><b>📦 Gesamt</b><div id="totalStat"></div></div>
 </section>
 
-<!-- MARKETS (Stufe 1 → Logos; Stufe 2 → Kategorien; Stufe 3 → Produkte) -->
-<section id="marketPage" class="page" hidden>
-  <header>
-    <button class="ghost" onclick="go('home')">🏠</button>
-    <h1 style="margin:0 8px">🏪 Supermärkte</h1>
-    <button class="ghost" id="marketBack" hidden>⬅️ Zurück</button>
-  </header>
+<!-- MARKETS -->
+<section id="markets" class="page" hidden>
+  <header><button class="ghost" onclick="go('home')">🏠</button><h1>🏪 Supermärkte</h1><button class="ghost" id="marketBack" hidden>⬅️ Zurück</button></header>
   <div id="marketStageGrid" class="grid"></div>
-  <div id="marketEmpty" class="empty" hidden>Keine Produkte in dieser Auswahl.</div>
+  <div id="marketEmpty" class="empty" hidden>Keine Produkte.</div>
 </section>
 
-<!-- PRODUCT DIALOG -->
+<!-- DIALOG -->
 <dialog id="dlg">
   <header><strong id="dlgTitle">Produkt</strong></header>
-  <form method="dialog" id="form">
+  <form id="form">
     <input type="hidden" name="id">
-    <input name="name" placeholder="Name (z. B. Mehl 405)" required>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <input name="qty" type="number" placeholder="Menge" value="1">
-      <input name="unit" placeholder="Einheit (Stk, kg, L …)">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <select name="cat">
-        <option value="">Kategorie wählen…</option>
-        <option>Backwaren</option><option>Getränke</option><option>Süßwaren</option>
-        <option>Konserven</option><option>Gewürze</option><option>Tiefkühl</option>
-        <option>Milchprodukte</option><option>Nudeln/Reis</option><option>Sonstiges</option>
-      </select>
-      <select name="market">
-        <option value="">— Markt —</option>
-        <option>Lidl</option><option>Aldi</option><option>Rewe</option><option>Action</option><option>Türkischer Markt</option>
-      </select>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <select name="place">
-        <option>Vorratsschrank</option><option>Kühlschrank</option><option>Gefrierfach</option>
-      </select>
-      <input name="mhd" type="date" placeholder="MHD">
-    </div>
-    <input name="imgUrl" placeholder="Bild-URL (optional)">
-    <textarea name="notes" rows="2" placeholder="Notizen (optional)"></textarea>
+    <input name="name" placeholder="Name" required>
+    <input name="qty" type="number" placeholder="Menge" value="1">
+    <input name="unit" placeholder="Einheit">
+    <select name="cat"><option>Backwaren</option><option>Getränke</option><option>Süßwaren</option><option>Nudeln/Reis</option><option>Milchprodukte</option><option>Sonstiges</option></select>
+    <select name="market"><option>Lidl</option><option>Aldi</option><option>Rewe</option><option>Action</option><option>Türkischer Markt</option></select>
+    <input name="mhd" type="date">
+    <input name="imgUrl" placeholder="Bild-URL">
   </form>
   <footer>
     <button id="delBtn" class="danger" hidden>🗑️ Löschen</button>
@@ -160,232 +133,57 @@ dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex
 </dialog>
 
 <script>
-/* ====== DB Setup ====== */
-const DB='pantry-sb-v1', STORE='items'; let db;
-const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'}); r.onsuccess=()=>{db=r.result;res();}; r.onerror=()=>rej(r.error);});
+/* DB Setup */
+let db; const DB='pantry', STORE='items';
+const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'});r.onsuccess=()=>{db=r.result;res();}});
 const st=(m='readonly')=>db.transaction(STORE,m).objectStore(STORE);
-const getAll=()=>new Promise((res,rej)=>{const q=st().getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error);});
-const put=(it)=>new Promise((res,rej)=>{const q=st('readwrite').put(it); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
-const delItem=(id)=>new Promise((res,rej)=>{const q=st('readwrite').delete(id); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const getAll=()=>new Promise(r=>{const q=st().getAll();q.onsuccess=()=>r(q.result||[]);});
+const put=(it)=>new Promise(r=>{st('readwrite').put(it).onsuccess=()=>r();});
+const delItem=(id)=>new Promise(r=>{st('readwrite').delete(id).onsuccess=()=>r();});
 
-/* ====== State/Refs ====== */
-const home=document.getElementById('home');
-const inventoryPage=document.getElementById('inventoryPage');
-const invGrid=document.getElementById('invGrid'); const invEmpty=document.getElementById('invEmpty'); const qEl=document.getElementById('q');
-const catList=document.getElementById('catList'); let ACTIVE_CAT='Alle';
-const shopPage=document.getElementById('shopPage'), shopList=document.getElementById('shopList');
-const dashPage=document.getElementById('dashPage'), soonList=document.getElementById('soonList'), expList=document.getElementById('expList'), totalStat=document.getElementById('totalStat');
-const marketPage=document.getElementById('marketPage'), marketStageGrid=document.getElementById('marketStageGrid'), marketEmpty=document.getElementById('marketEmpty'), marketBack=document.getElementById('marketBack');
-const dlg=document.getElementById('dlg'), form=document.getElementById('form'), dlgTitle=document.getElementById('dlgTitle'), saveBtn=document.getElementById('saveBtn'), delBtn=document.getElementById('delBtn');
+/* Navigation */
+function go(id){['home','inventory','shop','dashboard','markets'].forEach(x=>document.getElementById(x).hidden=true);document.getElementById(id).hidden=false;if(id==='inventory')renderInventory();if(id==='shop')renderShop();if(id==='dashboard')renderDash();if(id==='markets'){MARKET_STAGE='logos';renderMarkets();}}
 
-let MARKET_STAGE='logos', ACTIVE_MARKET='', ACTIVE_MARKET_CAT='';
-
-/* ====== Helpers ====== */
-const daysUntil=ds=>{ if(!ds) return null; const n=new Date(); n.setHours(0,0,0,0); const d=new Date(ds+'T00:00:00'); return Math.floor((d-n)/86400000); };
-const seedImage=(emoji,bg)=>`data:image/svg+xml;charset=utf-8,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><rect width='100%' height='100%' rx='40' ry='40' fill='"+bg+"'/><text x='50%' y='55%' text-anchor='middle' font-size='400'>"+emoji+"</text></svg>")}`;
-
-/* ====== Seed (Demo) ====== */
-async function seedIfEmpty(){
-  const all=await getAll(); if(all.length) return;
-  const plus=d=>{const x=new Date(); x.setDate(x.getDate()+d); return x.toISOString().slice(0,10);};
-  const items=[
-    {name:'Mehl 405 1kg',qty:3,unit:'kg',cat:'Backwaren',place:'Vorratsschrank',mhd:plus(180),imgUrl:seedImage('🌾','#eef'),market:'Lidl'},
-    {name:'Sonnenblumenöl 1L',qty:2,unit:'Fl',cat:'Sonstiges',place:'Vorratsschrank',mhd:plus(90),imgUrl:seedImage('🟡','#fff3cd'),market:'Aldi'},
-    {name:'Vollmilch 3,5%',qty:1,unit:'Pack',cat:'Milchprodukte',place:'Kühlschrank',mhd:plus(3),imgUrl:seedImage('🥛','#e8f2ff'),market:'Rewe'},
-    {name:'Spaghetti 500g',qty:0,unit:'Pack',cat:'Nudeln/Reis',place:'Vorratsschrank',mhd:plus(365),imgUrl:seedImage('🍝','#ffe8d6'),market:'Lidl'},
-    {name:'Schokolade 100g',qty:6,unit:'Tafeln',cat:'Süßwaren',place:'Vorratsschrank',mhd:plus(240),imgUrl:seedImage('🍫','#f8e1d9'),market:'Action'},
-    {name:'Ayran 250ml',qty:4,unit:'Becher',cat:'Getränke',place:'Kühlschrank',mhd:plus(7),imgUrl:seedImage('🥤','#e8fff5'),market:'Türkischer Markt'}
-  ];
-  for(const it of items){ await put({id:crypto.randomUUID(),...it,notes:''}); }
-}
-
-/* ====== Navigation ====== */
-function go(where){
-  window.scrollTo(0,0);
-  home.hidden=inventoryPage.hidden=shopPage.hidden=dashPage.hidden=marketPage.hidden=true;
-  if(where==='home'){ home.hidden=false; }
-  if(where==='inventory'){ inventoryPage.hidden=false; renderInventory(); }
-  if(where==='shop'){ shopPage.hidden=false; renderShop(); }
-  if(where==='dashboard'){ dashPage.hidden=false; renderDash(); }
-  if(where==='markets'){ marketPage.hidden=false; MARKET_STAGE='logos'; ACTIVE_MARKET=''; ACTIVE_MARKET_CAT=''; renderMarkets(); }
-}
-
-/* ====== Inventory (SB: Kategorien links) ====== */
+/* Inventory */
+let ACTIVE_CAT='Alle';
 async function renderInventory(){
   const all=await getAll();
-  // Kategorien aufbauen
-  const counts={'Alle':0}; all.forEach(it=>{ if(!it) return; const c=it.cat||'Sonstiges'; counts['Alle']++; counts[c]=(counts[c]||0)+1; });
-  catList.innerHTML='';
-  Object.keys(counts).sort((a,b)=>a==='Alle'?-1:b==='Alle'?1:a.localeCompare(b))
-    .forEach(cat=>{
-      const row=document.createElement('div'); row.className='cat'+(ACTIVE_CAT===cat?' active':'');
-      row.innerHTML=`<span>${cat}</span><span>${counts[cat]}</span>`;
-      row.onclick=()=>{ACTIVE_CAT=cat; renderInventory();};
-      catList.appendChild(row);
-    });
-  // Produkte filtern
-  const q=(qEl.value||'').toLowerCase();
-  const items=all.filter(it=>{
-    if(ACTIVE_CAT!=='Alle' && (it.cat||'Sonstiges')!==ACTIVE_CAT) return false;
-    const hay=[it.name,it.cat,it.market,it.place,it.notes].filter(Boolean).join(' ').toLowerCase();
-    return !q || hay.includes(q);
-  }).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  invGrid.innerHTML=''; invEmpty.hidden=items.length>0;
-  for(const it of items){
-    const d=daysUntil(it.mhd);
-    const card=document.createElement('div'); card.className='tile'; card.dataset.id=it.id;
-    const img=document.createElement('img'); img.src=it.imgUrl||''; img.onerror=()=>img.src=seedImage('📦','#eee');
-    const imgw=document.createElement('div'); imgw.className='imgwrap'; imgw.appendChild(img); card.appendChild(imgw);
-    if(d!==null){ const rib=document.createElement('div'); rib.className='ribbon'+(d<0?' exp':''); rib.textContent=d<0?'Abgelaufen':(d<=14?'Bald':''); if(rib.textContent) card.appendChild(rib); }
-    const body=document.createElement('div'); body.className='body';
-    body.innerHTML=`<div class="name">${it.name||''}</div><div class="meta">${it.qty||0} ${it.unit||''} · ${(it.market||'—')}</div>`;
-    card.appendChild(body);
-    card.onclick=()=>openDialog(it);
-    invGrid.appendChild(card);
-  }
+  const cats=['Alle',...new Set(all.map(i=>i.cat||'Sonstiges'))];
+  const catList=document.getElementById('catList');catList.innerHTML='';
+  cats.forEach(c=>{const div=document.createElement('div');div.className='cat'+(c===ACTIVE_CAT?' active':'');div.textContent=c;div.onclick=()=>{ACTIVE_CAT=c;renderInventory();};catList.appendChild(div);});
+  const q=(document.getElementById('q').value||'').toLowerCase();
+  const items=all.filter(i=>(ACTIVE_CAT==='Alle'||i.cat===ACTIVE_CAT)&&(!q||i.name.toLowerCase().includes(q)));
+  const grid=document.getElementById('invGrid');grid.innerHTML='';document.getElementById('invEmpty').hidden=items.length>0;
+  items.forEach(it=>{const d=it.mhd?Math.floor((new Date(it.mhd)-new Date())/86400000):null;
+    const card=document.createElement('div');card.className='tile';card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/150'"></div>${d!==null?(d<0?'<div class="ribbon exp">Abgelaufen</div>':d<=14?'<div class="ribbon">Bald</div>':''):''}<div class="body"><div class="name">${it.name}</div><div class="meta">${it.qty||0} ${it.unit||''}</div></div>`;card.onclick=()=>openDialog(it);grid.appendChild(card);});
 }
 
-  /* ==== Shopping (mit Warenkorb) ==== */
+/* Shop */
 async function renderShop(){
-  const all = await getAll();
-  const missing = all.filter(it => (it.qty||0) === 0);
-
-  const shopMissing = document.getElementById('shopMissing');
-  const shopCart = document.getElementById('shopCart');
-
-  shopMissing.innerHTML = '';
-  shopCart.innerHTML = '';
-
-  if(missing.length === 0){
-    shopMissing.innerHTML = '<div>Alles da ✅</div>';
-    return;
-  }
-
-  missing.forEach(it => {
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '10px';
-    row.style.marginTop = '8px';
-
-    row.innerHTML = `
-      <img src="${it.imgUrl||''}" 
-           onerror="this.src='https://via.placeholder.com/40'" 
-           style="width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid #eee">
-      <span style="flex:1">${it.name}</span>
-    `;
-
-    const toggle = document.createElement('input');
-    toggle.type = 'checkbox';
-    toggle.onchange = () => {
-      if(toggle.checked){
-        const cRow = row.cloneNode(true);
-        cRow.querySelector('input')?.remove();
-        const btn = document.createElement('button');
-        btn.textContent = "✅ Gekauft";
-        btn.className = "ghost2";
-        btn.onclick = async () => {
-          it.qty = 1;
-          await put(it);
-          renderShop();
-          renderInventory();
-        };
-        cRow.appendChild(btn);
-        shopCart.appendChild(cRow);
-        row.remove();
-      }
-    };
-
-    row.appendChild(toggle);
-    shopMissing.appendChild(row);
-  });
+  const all=await getAll();const missing=all.filter(i=>(i.qty||0)===0);
+  const m=document.getElementById('shopMissing');const c=document.getElementById('shopCart');m.innerHTML='';c.innerHTML='';
+  if(!missing.length){m.innerHTML='Alles da ✅';return;}
+  missing.forEach(it=>{const row=document.createElement('div');row.style.display='flex';row.style.alignItems='center';row.style.gap='10px';row.innerHTML=`<img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/40'" style="width:40px;height:40px"> ${it.name}`;const box=document.createElement('input');box.type='checkbox';box.onchange=()=>{if(box.checked){const newRow=row.cloneNode(true);newRow.querySelector('input')?.remove();const btn=document.createElement('button');btn.textContent='✅ Gekauft';btn.onclick=async()=>{it.qty=1;await put(it);renderShop();renderInventory();};newRow.appendChild(btn);c.appendChild(newRow);row.remove();}};row.appendChild(box);m.appendChild(row);});
 }
 
-/* ====== Dashboard ====== */
-async function renderDash(){
-  const all=await getAll();
-  const soon=all.filter(it=>{const d=daysUntil(it.mhd); return d!==null && d>=0 && d<=14;});
-  const exp =all.filter(it=>{const d=daysUntil(it.mhd); return d!==null && d<0;});
-  soonList.innerHTML = soon.length? soon.map(i=>'• '+i.name+' ('+(i.mhd||'')+')').join('<br>') : '—';
-  expList.innerHTML  = exp.length ? exp.map(i=>'• '+i.name+' ('+(i.mhd||'')+')').join('<br>')  : '—';
-  totalStat.textContent = 'Produkte gesamt: '+all.length;
-}
+/* Dashboard */
+async function renderDash(){const all=await getAll();const soon=all.filter(i=>{const d=i.mhd?Math.floor((new Date(i.mhd)-new Date())/86400000):null;return d!==null&&d>=0&&d<=14;});const exp=all.filter(i=>i.mhd&&new Date(i.mhd)<new Date());soonList.innerHTML=soon.map(i=>'• '+i.name).join('<br>')||'—';expList.innerHTML=exp.map(i=>'• '+i.name).join('<br>')||'—';totalStat.textContent='Produkte: '+all.length;}
 
-/* ====== Markets (3 Stufen) ====== */
-const MARKET_LOGOS=[
-  {name:'Lidl', icon:'🟦'}, {name:'Aldi', icon:'🔷'}, {name:'Rewe', icon:'🟥'},
-  {name:'Action', icon:'🟣'}, {name:'Türkischer Markt', icon:'🕌'}
-];
-const MARKET_CATS=['Getränke','Süßwaren','Backwaren','Gemüse/Obst','Fleisch/Fisch','Tiefkühl','Milchprodukte','Nudeln/Reis','Sonstiges'];
+/* Markets */
+let MARKET_STAGE='logos',ACTIVE_MARKET='',ACTIVE_CAT_M='';
+const MARKET_LOGOS=[{n:'Lidl',i:'🟦'},{n:'Aldi',i:'🔷'},{n:'Rewe',i:'🟥'},{n:'Action',i:'🟣'},{n:'Türkischer Markt',i:'🕌'}];
+const MARKET_CATS=['Getränke','Süßwaren','Backwaren','Milchprodukte','Nudeln/Reis','Sonstiges'];
+function renderMarkets(){marketStageGrid.innerHTML='';marketBack.hidden=(MARKET_STAGE==='logos');
+  if(MARKET_STAGE==='logos'){MARKET_LOGOS.forEach(m=>{const card=document.createElement('div');card.className='tile';card.innerHTML=`<div class="imgwrap" style="font-size:48px">${m.i}</div><div class="body"><div class="name">${m.n}</div></div>`;card.onclick=()=>{ACTIVE_MARKET=m.n;MARKET_STAGE='cats';renderMarkets();};marketStageGrid.appendChild(card);});}
+  else if(MARKET_STAGE==='cats'){MARKET_CATS.forEach(cat=>{const card=document.createElement('div');card.className='tile';card.innerHTML=`<div class="imgwrap">📦</div><div class="body"><div class="name">${cat}</div></div>`;card.onclick=()=>{ACTIVE_CAT_M=cat;MARKET_STAGE='items';renderMarkets();};marketStageGrid.appendChild(card);});}
+  else if(MARKET_STAGE==='items'){getAll().then(all=>{const items=all.filter(i=>i.market===ACTIVE_MARKET&&i.cat===ACTIVE_CAT_M);if(!items.length){marketEmpty.hidden=false;return;}marketEmpty.hidden=true;items.forEach(it=>{const card=document.createElement('div');card.className='tile';card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/150'"></div><div class="body"><div class="name">${it.name}</div></div>`;marketStageGrid.appendChild(card);});});}}
+marketBack.onclick=()=>{MARKET_STAGE=(MARKET_STAGE==='items'?'cats':'logos');renderMarkets();};
 
-function renderMarkets(){
-  marketEmpty.hidden=true; marketStageGrid.innerHTML='';
-  marketBack.hidden = (MARKET_STAGE==='logos');
-  if(MARKET_STAGE==='logos'){
-    MARKET_LOGOS.forEach(m=>{
-      const card=document.createElement('div'); card.className='tile';
-      card.innerHTML=`<div class="imgwrap" style="font-size:48px">${m.icon}</div><div class="body"><div class="name">${m.name}</div></div>`;
-      card.onclick=()=>{ ACTIVE_MARKET=m.name; MARKET_STAGE='cats'; renderMarkets(); };
-      marketStageGrid.appendChild(card);
-    });
-  } else if(MARKET_STAGE==='cats'){
-    MARKET_CATS.forEach(cat=>{
-      const card=document.createElement('div'); card.className='tile';
-      card.innerHTML=`<div class="imgwrap">${cat.startsWith('Getränke')?'🥤':cat.startsWith('Süß')?'🍫':cat.startsWith('Back')?'🍞':cat.startsWith('Gemüse')?'🥬':cat.startsWith('Fleisch')?'🥩':cat.startsWith('Tief')?'❄️':cat.startsWith('Milch')?'🥛':cat.startsWith('Nudeln')?'🍝':'📦'}</div><div class="body"><div class="name">${cat}</div><div class="meta">${ACTIVE_MARKET}</div></div>`;
-      card.onclick=()=>{ ACTIVE_MARKET_CAT=cat; MARKET_STAGE='items'; renderMarkets(); };
-      marketStageGrid.appendChild(card);
-    });
-  } else if(MARKET_STAGE==='items'){
-    // Filter Produkte zu Market + Cat
-    getAll().then(all=>{
-      const items=all.filter(it=>(it.market||'')===ACTIVE_MARKET && (it.cat||'Sonstiges')===ACTIVE_MARKET_CAT);
-      if(items.length===0){ marketEmpty.hidden=false; marketStageGrid.innerHTML=''; return; }
-      items.forEach(it=>{
-        const card=document.createElement('div'); card.className='tile'; card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src=''" /></div><div class="body"><div class="name">${it.name}</div><div class="meta">${it.qty||0} ${it.unit||''}</div></div>`;
-        card.onclick=()=>openDialog(it);
-        marketStageGrid.appendChild(card);
-      });
-    });
-  }
-}
-marketBack.onclick=()=>{ if(MARKET_STAGE==='items'){MARKET_STAGE='cats';} else if(MARKET_STAGE==='cats'){MARKET_STAGE='logos';} renderMarkets(); };
-
-/* ====== Dialog: Add/Edit/Delete ====== */
-function openDialog(it){
-  form.reset(); delBtn.hidden=true; dlgTitle.textContent='Produkt hinzufügen';
-  if(it && it.id){ dlgTitle.textContent='Produkt bearbeiten'; delBtn.hidden=false; for(const [k,v] of Object.entries(it)){ if(form.elements[k]!==undefined) form.elements[k].value=v??''; } }
-  dlg.showModal();
-  delBtn.onclick=async()=>{ if(!it?.id) return; if(confirm('Wirklich löschen?')){ await delItem(it.id); dlg.close(); renderInventory(); if(marketPage.hidden===false && MARKET_STAGE==='items') renderMarkets(); } };
-}
+/* Dialog */
+const dlg=document.getElementById('dlg');const form=document.getElementById('form');const delBtn=document.getElementById('delBtn');
+function openDialog(it){form.reset();delBtn.hidden=!it;document.getElementById('dlgTitle').textContent=it?'Produkt bearbeiten':'Produkt hinzufügen';if(it)Object.entries(it).forEach(([k,v])=>{if(form[k])form[k].value=v;});dlg.showModal();delBtn.onclick=async()=>{await delItem(it.id);dlg.close();renderInventory();renderShop();};}
 document.getElementById('addBtn').onclick=()=>openDialog();
-saveBtn.onclick=async()=>{
-  const fd=new FormData(form);
-  const item={
-    id:fd.get('id')||crypto.randomUUID(),
-    name:(fd.get('name')||'').trim(),
-    qty:Number(fd.get('qty')||0),
-    unit:(fd.get('unit')||'').trim(),
-    cat:(fd.get('cat')||'').trim()||'Sonstiges',
-    market:(fd.get('market')||'').trim(),
-    place:(fd.get('place')||fd.get('place')||'Vorratsschrank'),
-    mhd:fd.get('mhd')||'',
-    imgUrl:(fd.get('imgUrl')||'').trim(),
-    notes:(fd.get('notes')||'').trim()
-  };
-  if(!item.name){ alert('Name fehlt'); return; }
-  await put(item);
-  dlg.close();
-  if(!inventoryPage.hidden) renderInventory();
-  if(!marketPage.hidden && MARKET_STAGE==='items') renderMarkets();
-  if(!shopPage.hidden) renderShop();
-  if(!dashPage.hidden) renderDash();
-};
+document.getElementById('saveBtn').onclick=async()=>{const fd=new FormData(form);const item=Object.fromEntries(fd.entries());item.id=item.id||crypto.randomUUID();item.qty=Number(item.qty||0);await put(item);dlg.close();renderInventory();renderShop();renderDash();};
 
-/* ====== INIT ====== */
-(async function init(){
-  await openDB(); await seedIfEmpty();
-  go('home'); // Start
-})();
-</script>
-</body>
-</html>
+/* Init */
+(async()=>{await openDB();go('home');})();
