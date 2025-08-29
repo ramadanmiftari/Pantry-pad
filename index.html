@@ -142,9 +142,25 @@ const put=(it)=>new Promise(r=>{st('readwrite').put(it).onsuccess=()=>r();});
 const delItem=(id)=>new Promise(r=>{st('readwrite').delete(id).onsuccess=()=>r();});
 
 /* Navigation */
-function go(id){['home','inventory','shop','dashboard','markets'].forEach(x=>document.getElementById(x).hidden=true);document.getElementById(id).hidden=false;if(id==='inventory')renderInventory();if(id==='shop')renderShop();if(id==='dashboard')renderDash();if(id==='markets'){MARKET_STAGE='logos';renderMarkets();}}
+/* Navigation */
+function go(id){
+  // alle bekannten Seiten verstecken
+  ["home","inventory","shop","dashboard","markets"].forEach(x=>{
+    const el=document.getElementById(x);
+    if(el) el.hidden=true;
+  });
 
-/* Inventory */
+  // gewünschte Seite zeigen
+  const target=document.getElementById(id);
+  if(target) target.hidden=false;
+
+  // Spezial-Render
+  if(id==="inventory") renderInventory();
+  if(id==="shop") renderShop();
+  if(id==="dashboard") renderDash();
+  if(id==="markets"){ MARKET_STAGE="logos"; renderMarkets(); }
+}
+  /* Inventory */
 let ACTIVE_CAT='Alle';
 async function renderInventory(){
   const all=await getAll();
