@@ -142,27 +142,46 @@ dialog footer{display:flex;justify-content:flex-end;gap:8px;padding:10px;border-
   <button id="saveBtn" class="primary">Speichern</button>
  </footer>
 </dialog>
-
 <script>
-let IS_ADMIN=false, LANG='de'; let db; const DB='pantry-db', STORE='items';
-const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'});r.onsuccess=()=>{db=r.result;res();};});
+let IS_ADMIN=false, LANG='de'; 
+let db; const DB='pantry-db', STORE='items';
+
+/* ==== IndexedDB ==== */
+const openDB=()=>new Promise((res,rej)=>{
+  const r=indexedDB.open(DB,1);
+  r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'});
+  r.onsuccess=()=>{db=r.result;res();};
+});
 const st=(m='readonly')=>db.transaction(STORE,m).objectStore(STORE);
 const getAll=()=>new Promise(r=>{const q=st().getAll();q.onsuccess=()=>r(q.result||[]);});
 const put=(it)=>new Promise(r=>{st('readwrite').put(it).onsuccess=()=>r();});
 
-/* Home Kacheln */
+/* ==== Home Kacheln ==== */
 function buildHome(){
  const c=document.getElementById('homeChoices');c.innerHTML='';
- const base=[{id:'inventory',icon:'👀',title:'Nachschauen'},{id:'shop',icon:'🛒',title:'Einkaufsliste'},{id:'dashboard',icon:'📊',title:'Dashboard'},{id:'markets',icon:'🏪',title:'Supermärkte'}];
- const admin=[{id:'cookbook',icon:'📖',title:'Kochbuch'},{id:'settings',icon:'⚙️',title:'Einstellungen'}];
+ const base=[
+   {id:'inventory',icon:'👀',title:'Nachschauen'},
+   {id:'shop',icon:'🛒',title:'Einkaufsliste'},
+   {id:'dashboard',icon:'📊',title:'Dashboard'},
+   {id:'markets',icon:'🏪',title:'Supermärkte'}
+ ];
+ const admin=[
+   {id:'cookbook',icon:'📖',title:'Kochbuch'},
+   {id:'settings',icon:'⚙️',title:'Einstellungen'}
+ ];
  (IS_ADMIN?[...base,...admin]:base).forEach(x=>{
-  const b=document.createElement('button');b.className='choice';b.innerHTML=`<span class="icon">${x.icon}</span><span>${x.title}</span>`;b.onclick=()=>go(x.id);c.appendChild(b);
+  const b=document.createElement('button');
+  b.className='choice';
+  b.innerHTML=`<span class="icon">${x.icon}</span><span>${x.title}</span>`;
+  b.onclick=()=>go(x.id);
+  c.appendChild(b);
  });
 }
 
-/* Navigation */
+/* ==== Navigation ==== */
 function go(id){
- ['home','app','shopPage','dashPage','marketPage','cookPage','settingsPage'].forEach(x=>document.getElementById(x).hidden=true);
+ ['home','app','shopPage','dashPage','marketPage','cookPage','settingsPage']
+   .forEach(x=>document.getElementById(x).hidden=true);
  if(id==='inventory'){document.getElementById('app').hidden=false;renderInventory();}
  if(id==='shop'){document.getElementById('shopPage').hidden=false;renderShop();}
  if(id==='dashboard'){document.getElementById('dashPage').hidden=false;renderDash();}
@@ -172,7 +191,7 @@ function go(id){
  if(id==='home'){document.getElementById('home').hidden=false;buildHome();}
 }
 
-/* Inventory */
+/* ==== Inventory ==== */
 async function renderInventory(){
  const grid=document.getElementById('grid');grid.innerHTML='';
  const items=await getAll();
@@ -181,46 +200,77 @@ async function renderInventory(){
  items.forEach(it=>{
   const d=it.mhd?Math.floor((new Date(it.mhd)-new Date())/86400000):null;
   const card=document.createElement('div');card.className='tile';card.dataset.id=it.id;
-  card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/150'"></div>
-  ${d!==null?(d<0?'<div class="ribbon exp">Abgelaufen</div>':d<=14?'<div class="ribbon">Bald</div>':''):''}
-  <div class="body"><div class="name">${it.name}</div><div class="meta">${it.qty} ${it.unit||''}</div></div>`;
+  card.innerHTML=`
+   <div class="imgwrap"><img src="${it.imgUrl||''}" 
+     onerror="this.src='https://via.placeholder.com/150'"></div>
+   ${d!==null?(d<0?'<div class="ribbon exp">Abgelaufen</div>':
+     d<=14?'<div class="ribbon">Bald</div>':''):''}
+   <div class="body">
+     <div class="name">${it.name}</div>
+     <div class="meta">${it.qty} ${it.unit||''}</div>
+   </div>`;
   card.onclick=()=>openEdit(it.id);
   grid.appendChild(card);
  });
 }
 
-/* Shop */
+/* ==== Shop ==== */
 async function renderShop(){
  const list=document.getElementById('shopList');list.innerHTML='';
  const items=(await getAll()).filter(i=>(i.qty||0)==0);
  if(!items.length){list.innerHTML='Alles da ✅';return;}
- items.forEach(i=>{const d=document.createElement('div');d.className='stat';d.textContent=i.name;list.appendChild(d);});
+ items.forEach(i=>{
+   const d=document.createElement('div');
+   d.className='stat';d.textContent=i.name;
+   list.appendChild(d);
+ });
 }
 
-/* Dashboard */
+/* ==== Dashboard ==== */
 async function renderDash(){
- const all=await getAll();let soon=all.filter(i=>i.mhd&&Math.floor((new Date(i.mhd)-new Date())/86400000)<=14&&Math.floor((new Date(i.mhd)-new Date())/86400000)>=0);
+ const all=await getAll();
+ let soon=all.filter(i=>i.mhd&&Math.floor((new Date(i.mhd)-new Date())/86400000)<=14&&Math.floor((new Date(i.mhd)-new Date())/86400000)>=0);
  let exp=all.filter(i=>i.mhd&&new Date(i.mhd)<new Date());
  document.getElementById('dashSoon').textContent='Bald ablaufend: '+soon.map(x=>x.name).join(', ');
  document.getElementById('dashExp').textContent='Abgelaufen: '+exp.map(x=>x.name).join(', ');
  document.getElementById('dashTotal').textContent='Gesamt: '+all.length;
 }
 
-/* Markets */
+/* ==== Markets ==== */
 function renderMarkets(){
- const m=[{n:'Lidl',l:'https://www.lidl.de'},{n:'Aldi',l:'https://www.aldi.de'},{n:'Rewe',l:'https://www.rewe.de'},{n:'Action',l:'https://www.action.com/de-de'},{n:'Türkischer Markt',l:'#'}];
+ const m=[
+   {n:'Lidl',l:'https://www.lidl.de'},
+   {n:'Aldi',l:'https://www.aldi.de'},
+   {n:'Rewe',l:'https://www.rewe.de'},
+   {n:'Action',l:'https://www.action.com/de-de'},
+   {n:'Türkischer Markt',l:'#'}
+ ];
  const g=document.getElementById('marketGrid');g.innerHTML='';
- m.forEach(x=>{const c=document.createElement('div');c.className='tile';c.innerHTML=`<div class="imgwrap">${x.n[0]}</div><div class="body"><div class="name">${x.n}</div><a href="${x.l}" target="_blank">Prospekt ▶️</a></div>`;g.appendChild(c);});
+ m.forEach(x=>{
+   const c=document.createElement('div');c.className='tile';
+   c.innerHTML=`<div class="imgwrap">${x.n[0]}</div>
+     <div class="body"><div class="name">${x.n}</div>
+     <a href="${x.l}" target="_blank">Prospekt ▶️</a></div>`;
+   g.appendChild(c);
+ });
 }
 
-/* Cookbook */
+/* ==== Cookbook ==== */
 function renderCook(){
- const R=[{t:'Menemen',y:'https://www.youtube.com/results?search_query=menemen+sally',i:['Eier','Tomaten','Paprika']},{t:'Pfannkuchen',y:'https://www.youtube.com/results?search_query=pfannkuchen+sally',i:['Mehl','Milch','Ei']}];
+ const R=[
+   {t:'Menemen',y:'https://www.youtube.com/results?search_query=menemen+sally',i:['Eier','Tomaten','Paprika']},
+   {t:'Pfannkuchen',y:'https://www.youtube.com/results?search_query=pfannkuchen+sally',i:['Mehl','Milch','Ei']}
+ ];
  const g=document.getElementById('recipesGrid');g.innerHTML='';
- R.forEach(r=>{const c=document.createElement('div');c.className='tile';c.innerHTML=`<div class="imgwrap">🍳</div><div class="body"><div class="name">${r.t}</div><a href="${r.y}" target="_blank">▶️ Video</a></div>`;g.appendChild(c);});
+ R.forEach(r=>{
+   const c=document.createElement('div');c.className='tile';
+   c.innerHTML=`<div class="imgwrap">🍳</div>
+     <div class="body"><div class="name">${r.t}</div>
+     <a href="${r.y}" target="_blank">▶️ Video</a></div>`;
+   g.appendChild(c);
+ });
 }
-
-/* Settings */
+ /* ==== Settings ==== */
 function renderSettings(){
  document.getElementById('settingsBox').innerHTML=`
   <div class="stat"><strong>Themes</strong><br>
@@ -232,14 +282,71 @@ function renderSettings(){
    <button onclick="setTheme('xmas')">Weihnachten</button>
    <button onclick="setTheme('spring')">Frühling</button>
   </div>
-  <div class="stat"><strong>AI Figuren</strong><br><button onclick="toggleAI()">An/Aus</button></div>
+  <div class="stat"><strong>AI Figuren</strong><br>
+    <button onclick="toggleAI()">An/Aus</button></div>
  `;
 }
 function setTheme(t){document.body.className=t;}
-function toggleAI(){document.getElementById('aiIlyan').hidden=!document.getElementById('aiIlyan').hidden;document.getElementById('aiLiaz').hidden=!document.getElementById('aiLiaz').hidden;}
+function toggleAI(){
+ document.getElementById('aiIlyan').hidden=!document.getElementById('aiIlyan').hidden;
+ document.getElementById('aiLiaz').hidden=!document.getElementById('aiLiaz').hidden;
+}
 
-/* Dialog */
-const dlg=document.getElementById('dlg');const form=document.getElementById('form');
-document.getElementById('add').onclick=()=>{form.reset();form.id.value='';dlg.showModal();}
-document.getElementById('saveBtn').onclick=async()=>{const it={id:form.id.value||crypto.randomUUID(),name:form.name.value,qty:Number(form.qty.value||0),unit:form.unit.value,cat:form.cat.value,loc:form.loc.value,mhd:form.mhd.value,imgUrl:form.imgUrl.value};await put(it);dlg.close();renderInventory();}
-async function openEdit(id){const all=await getAll();const it=all.find(x=>x.id===id);if(!it)return;for
+/* ==== Dialog für Produkte ==== */
+const dlg=document.getElementById('dlg');
+const form=document.getElementById('form');
+document.getElementById('add').onclick=()=>{
+ form.reset();form.id.value='';dlg.showModal();
+};
+document.getElementById('saveBtn').onclick=async()=>{
+ const it={
+   id:form.id.value||crypto.randomUUID(),
+   name:form.name.value,
+   qty:Number(form.qty.value||0),
+   unit:form.unit.value,
+   cat:form.cat.value,
+   loc:form.loc.value,
+   mhd:form.mhd.value,
+   imgUrl:form.imgUrl.value
+ };
+ await put(it);
+ dlg.close();
+ renderInventory();
+};
+async function openEdit(id){
+ const all=await getAll();const it=all.find(x=>x.id===id);
+ if(!it)return;
+ for(const k in it){if(form[k]!==undefined)form[k].value=it[k]||'';}
+ dlg.showModal();
+}
+
+/* ==== Login ==== */
+document.getElementById('loginBtn').onclick=()=>{
+ const pin=prompt("Admin-PIN eingeben:");
+ if(pin==="1234"){IS_ADMIN=true;alert("Admin-Modus aktiviert");buildHome();}
+ else{alert("Falsche PIN");}
+};
+
+/* ==== AI Figuren (Texte wechseln) ==== */
+const msgsI=["Ich helfe dir!","Schau mal ins Dashboard!","Vergiss das MHD nicht!"];
+const msgsL=["Hast du schon eingekauft?","Lass uns kochen!","Heute alles im Griff?"];
+let i1=0,i2=0;
+setInterval(()=>{
+ if(!document.getElementById('aiIlyan').hidden){
+   document.getElementById('msgIlyan').style.display='block';
+   document.getElementById('msgIlyan').textContent=msgsI[i1++%msgsI.length];
+ }
+ if(!document.getElementById('aiLiaz').hidden){
+   document.getElementById('msgLiaz').style.display='block';
+   document.getElementById('msgLiaz').textContent=msgsL[i2++%msgsL.length];
+ }
+},6000);
+
+/* ==== INIT ==== */
+(async()=>{
+ await openDB();
+ buildHome();
+})();
+</script>
+</body>
+</html>
