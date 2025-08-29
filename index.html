@@ -9,82 +9,57 @@
     --bg-grad: linear-gradient(135deg,#6a5cff,#20c997);
     --card:#ffffff; --text:#1f2937; --muted:#64748b;
     --shadow: 0 10px 30px rgba(0,0,0,.12);
-    --tile: #fff;
-    --tile-hover: #f8fafc;
-    --radius: 18px;
+    --tile: #fff; --tile-hover:#f8fafc; --radius:18px;
+    --line:#e8eef5;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
-  .hero{
-    min-height:100vh;
-    background:var(--bg-grad);
-    display:grid;
-    grid-template-rows:auto 1fr;
-    color:#fff;
-  }
-  /* Topbar */
-  .topbar{
-    display:flex;justify-content:flex-end;align-items:center;gap:10px;
-    padding:14px 18px;
-  }
-  .lang{
-    position:relative;
-  }
-  .lang button{
-    display:flex;align-items:center;gap:8px;
-    background:#ffffff; color:#111;
-    border:0; padding:8px 12px; border-radius:999px;
-    box-shadow:var(--shadow); cursor:pointer; font-size:15px;
-  }
-  .lang-list{
-    position:absolute; right:0; top:46px; min-width:190px;
-    background:#fff; color:#111; border-radius:14px; box-shadow:var(--shadow);
-    display:none; overflow:hidden;
-  }
+
+  /* HOME (Hero) */
+  .hero{min-height:100vh;background:var(--bg-grad);display:grid;grid-template-rows:auto 1fr;color:#fff}
+  .topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 18px}
+  .lang{position:relative}
+  .lang button{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
+  .lang-list{position:absolute;right:0;top:46px;min-width:200px;background:#fff;color:#111;border-radius:14px;box-shadow:var(--shadow);display:none;overflow:hidden}
   .lang.open .lang-list{display:block}
-  .lang-list button{
-    width:100%; text-align:left; padding:10px 12px; border:0; background:#fff; cursor:pointer; font-size:15px;
-    display:flex; align-items:center; gap:10px;
-  }
+  .lang-list button{width:100%;text-align:left;padding:10px 12px;border:0;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:10px}
   .lang-list button:hover{background:#f8fafc}
 
-  /* Content */
-  .wrap{
-    display:grid; place-content:center; text-align:center; padding:24px; gap:20px;
-  }
-  .title{font-size:clamp(24px,4vw,36px); font-weight:800; margin:0}
-  .subtitle{opacity:.95; margin:0 0 6px; font-size:clamp(14px,2.2vw,18px)}
-  .grid{
-    width:min(980px,94vw);
-    margin:18px auto 0;
-    display:grid; gap:16px;
-    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-  }
-  .tile{
-    background:var(--tile); color:#111; border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:18px;
-    border:1px solid #eef2f7;
-    display:flex; align-items:center; gap:14px; cursor:pointer;
-    transition:transform .05s ease, background .2s ease;
-  }
-  .tile:active{transform:scale(.98)}
-  .tile:hover{background:var(--tile-hover)}
-  .icon{font-size:28px; line-height:1}
-  .twrap{display:flex; flex-direction:column; align-items:flex-start}
-  .tmain{font-weight:700; font-size:18px}
-  .tmuted{color:var(--muted); font-size:14px}
-  /* Footer hint */
-  .hint{opacity:.9; font-size:13px; margin-top:8px}
+  .wrap{display:grid;place-content:center;text-align:center;padding:24px;gap:20px}
+  .title{font-size:clamp(24px,4vw,36px);font-weight:800;margin:0}
+  .subtitle{opacity:.95;margin:0 0 6px;font-size:clamp(14px,2.2vw,18px)}
+  .grid{width:min(980px,94vw);margin:18px auto 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .tile{background:var(--tile);color:#111;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .05s ease, background .2s ease}
+  .tile:active{transform:scale(.98)} .tile:hover{background:var(--tile-hover)}
+  .icon{font-size:28px;line-height:1}
+  .twrap{display:flex;flex-direction:column;align-items:flex-start}
+  .tmain{font-weight:700;font-size:18px}
+  .tmuted{color:var(--muted);font-size:14px}
+  .hint{opacity:.9;font-size:13px;margin-top:8px}
+
+  /* Subpages */
+  .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
+  header.pagebar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  .ghost{background:#fff;color:#111;border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer}
+  .pagewrap{padding:18px}
+
+  /* Grids */
+  .grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+  .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer}
+  .catcard .big{font-size:34px;margin-bottom:8px}
+  .empty{padding:36px;text-align:center;color:#6b7280}
 </style>
 </head>
 <body>
-<section class="hero">
-  <!-- Topbar -->
+
+<!-- HOME -->
+<section id="home" class="hero">
   <div class="topbar">
     <div class="lang" id="langBox">
-      <button id="langBtn" aria-haspopup="listbox">🌐 <span id="langLabel">Deutsch</span></button>
-      <div class="lang-list" role="listbox" aria-label="Sprache wählen">
+      <button id="langBtn">🌐 <span id="langLabel">Deutsch</span></button>
+      <div class="lang-list">
         <button data-lang="de">🇩🇪 Deutsch</button>
         <button data-lang="en">🇬🇧 English</button>
         <button data-lang="tr">🇹🇷 Türkçe</button>
@@ -93,161 +68,165 @@
       </div>
     </div>
   </div>
-
-  <!-- Welcome + Tiles -->
   <div class="wrap">
     <h1 class="title" id="welcome">👋 Willkommen im Pantry Pad</h1>
     <p class="subtitle" id="choose">Bitte wähle eine Funktion:</p>
-
     <div class="grid">
-      <button class="tile" data-nav="inventory">
-        <div class="icon">📦</div>
-        <div class="twrap">
-          <div class="tmain" id="t-inventory">Bestand</div>
-          <div class="tmuted" id="d-inventory">Alle Produkte ansehen</div>
-        </div>
-      </button>
-
-      <button class="tile" data-nav="markets">
-        <div class="icon">🏪</div>
-        <div class="twrap">
-          <div class="tmain" id="t-markets">Supermärkte</div>
-          <div class="tmuted" id="d-markets">Lidl, Aldi, REWE …</div>
-        </div>
-      </button>
-
-      <button class="tile" data-nav="shop">
-        <div class="icon">🛒</div>
-        <div class="twrap">
-          <div class="tmain" id="t-shop">Einkauf</div>
-          <div class="tmuted" id="d-shop">Fehlendes schnell abhaken</div>
-        </div>
-      </button>
-
-      <button class="tile" data-nav="dashboard">
-        <div class="icon">📊</div>
-        <div class="twrap">
-          <div class="tmain" id="t-dashboard">Übersicht</div>
-          <div class="tmuted" id="d-dashboard">MHD & Statistiken</div>
-        </div>
-      </button>
+      <button class="tile" data-nav="stock"><div class="icon">📦</div><div class="twrap"><div class="tmain" id="t-stock">Bestand</div><div class="tmuted" id="d-stock">Produkte nach Ort</div></div></button>
+      <button class="tile" data-nav="markets"><div class="icon">🏪</div><div class="twrap"><div class="tmain" id="t-markets">Supermärkte</div><div class="tmuted" id="d-markets">Lidl, Aldi, REWE …</div></div></button>
+      <button class="tile" data-nav="shop"><div class="icon">🛒</div><div class="twrap"><div class="tmain" id="t-shop">Einkauf</div><div class="tmuted" id="d-shop">Fehlendes abhaken</div></div></button>
+      <button class="tile" data-nav="overview"><div class="icon">📊</div><div class="twrap"><div class="tmain" id="t-overview">Übersicht</div><div class="tmuted" id="d-overview">MHD & Statistiken</div></div></button>
     </div>
-
     <div class="hint" id="hint">(Kacheln sind Platzhalter – Funktionalität fügen wir als Nächstes hinzu)</div>
   </div>
 </section>
 
+<!-- BESTAND – Orte -->
+<section id="stock" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">📦 Bestand</h3>
+  </header>
+  <div class="pagewrap">
+    <div class="grid2">
+      <button class="tile" onclick="openAll()"><span class="icon">📦</span><div class="twrap"><div class="tmain">Gesamtbestand</div><div class="tmuted">Alles auf einmal</div></div></button>
+      <button class="tile" onclick="openPlace('Vorratsschrank')"><span class="icon">🗄️</span><div class="twrap"><div class="tmain">Vorratsschrank</div><div class="tmuted">Trockene Lebensmittel</div></div></button>
+      <button class="tile" onclick="openPlace('Gefriertruhe')"><span class="icon">❄️</span><div class="twrap"><div class="tmain">Gefriertruhe</div><div class="tmuted">Tiefgekühltes</div></div></button>
+      <button class="tile" onclick="openPlace('Kühlschrank')"><span class="icon">🧊</span><div class="twrap"><div class="tmain">Kühlschrank</div><div class="tmuted">Frische Ware</div></div></button>
+    </div>
+    <p class="hint">Tippe auf einen Ort, dann wählst du Kategorien wie an der SB-Kasse.</p>
+  </div>
+</section>
+
+<!-- BESTAND – Kategorien pro Ort -->
+<section id="stockCats" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('stock')">⬅️ Zurück</button>
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 id="placeTitle" style="margin:0">Ort</h3>
+  </header>
+  <div class="pagewrap">
+    <div id="catGrid" class="catgrid"></div>
+    <p class="hint">Kategorien wie an der SB-Kasse. Danach zeigen wir die Produkte (kommt im nächsten Schritt).</p>
+  </div>
+</section>
+
+<!-- BESTAND – Gesamt -->
+<section id="stockAll" class="page" hidden>
+  <header class="pagebar">
+    <button class="ghost" onclick="nav('stock')">⬅️ Zurück</button>
+    <button class="ghost" onclick="nav('home')">🏠 Home</button>
+    <h3 style="margin:0">📦 Gesamtbestand</h3>
+  </header>
+  <div class="pagewrap">
+    <div class="empty">Hier erscheinen später alle Produkte (Kacheln + Suche/Filter).</div>
+  </div>
+</section>
+
 <script>
-  // --- i18n Texte ---
-  const T = {
-    de: {
-      label:'Deutsch',
-      welcome:'👋 Willkommen im Pantry Pad',
-      choose:'Bitte wähle eine Funktion:',
-      tiles:{
-        inventory:['Bestand','Alle Produkte ansehen'],
-        markets:['Supermärkte','Lidl, Aldi, REWE …'],
-        shop:['Einkauf','Fehlendes schnell abhaken'],
-        dashboard:['Übersicht','MHD & Statistiken'],
-      },
-      hint:'(Kacheln sind Platzhalter – Funktionalität fügen wir als Nächstes hinzu)',
-    },
-    en: {
-      label:'English',
-      welcome:'👋 Welcome to Pantry Pad',
-      choose:'Please choose an option:',
-      tiles:{
-        inventory:['Inventory','View all items'],
-        markets:['Supermarkets','Lidl, Aldi, REWE …'],
-        shop:['Shopping','Quickly check missing items'],
-        dashboard:['Overview','Expiry & stats'],
-      },
-      hint:'(Tiles are placeholders — we will add functionality next)',
-    },
-    tr: {
-      label:'Türkçe',
-      welcome:'👋 Pantry Pad’e hoş geldin',
-      choose:'Lütfen bir seçenek seç:',
-      tiles:{
-        inventory:['Stok','Tüm ürünleri gör'],
-        markets:['Süpermarketler','Lidl, Aldi, REWE …'],
-        shop:['Alışveriş','Eksikleri hızlıca işaretle'],
-        dashboard:['Genel Bakış','SKT & istatistikler'],
-      },
-      hint:'(Kutucuklar şimdilik örnek — işlevleri birazdan ekleyeceğiz)',
-    },
-    it: {
-      label:'Italiano',
-      welcome:'👋 Benvenuto in Pantry Pad',
-      choose:'Scegli un’opzione:',
-      tiles:{
-        inventory:['Scorte','Vedi tutti i prodotti'],
-        markets:['Supermercati','Lidl, Aldi, REWE …'],
-        shop:['Spesa','Spunta ciò che manca'],
-        dashboard:['Panoramica','Scadenze e statistiche'],
-      },
-      hint:'(Le tessere sono segnaposto — aggiungeremo le funzioni dopo)',
-    },
-    fr: {
-      label:'Français',
-      welcome:'👋 Bienvenue sur Pantry Pad',
-      choose:'Choisissez une fonction :',
-      tiles:{
-        inventory:['Stock','Voir tous les produits'],
-        markets:['Supermarchés','Lidl, Aldi, REWE …'],
-        shop:['Courses','Cocher les manquants'],
-        dashboard:['Aperçu','DLUO & statistiques'],
-      },
-      hint:'(Les tuiles sont des exemples — on ajoute les fonctions ensuite)',
-    }
-  };
+/* ===== Sprachtexte ===== */
+const T={
+  de:{label:'Deutsch',welcome:'👋 Willkommen im Pantry Pad',choose:'Bitte wähle eine Funktion:',
+    tiles:{stock:['Bestand','Produkte nach Ort'],markets:['Supermärkte','Lidl, Aldi, REWE …'],shop:['Einkauf','Fehlendes abhaken'],overview:['Übersicht','MHD & Statistiken']}},
+  en:{label:'English',welcome:'👋 Welcome to Pantry Pad',choose:'Please choose an option:',
+    tiles:{stock:['Inventory','Items by location'],markets:['Supermarkets','Lidl, Aldi, REWE …'],shop:['Shopping','Check missing'],overview:['Overview','Expiry & stats']}},
+  tr:{label:'Türkçe',welcome:'👋 Pantry Pad’e hoş geldin',choose:'Lütfen bir seçenek seç:',
+    tiles:{stock:['Stok','Konuma göre ürünler'],markets:['Süpermarketler','Lidl, Aldi, REWE …'],shop:['Alışveriş','Eksikleri işaretle'],overview:['Genel Bakış','SKT & istatistikler']}},
+  it:{label:'Italiano',welcome:'👋 Benvenuto in Pantry Pad',choose:'Scegli un’opzione:',
+    tiles:{stock:['Scorte','Prodotti per posizione'],markets:['Supermercati','Lidl, Aldi, REWE …'],shop:['Spesa','Spunta mancanti'],overview:['Panoramica','Scadenze e statistiche']}},
+  fr:{label:'Français',welcome:'👋 Bienvenue sur Pantry Pad',choose:'Choisissez une fonction :',
+    tiles:{stock:['Stock','Produits par emplacement'],markets:['Supermarchés','Lidl, Aldi, REWE …'],shop:['Courses','Cocher les manquants'],overview:['Aperçu','DLUO & statistiques']}}
+};
 
-  // --- Sprache laden/setzen ---
-  const langBox = document.getElementById('langBox');
-  const langBtn = document.getElementById('langBtn');
-  const langLabel = document.getElementById('langLabel');
-  const saved = localStorage.getItem('pantry_lang') || 'de';
-  setLang(saved);
+/* ===== Sprache anwenden ===== */
+const langBox=document.getElementById('langBox');
+const langBtn=document.getElementById('langBtn');
+const langLabel=document.getElementById('langLabel');
+const saved=localStorage.getItem('pantry_lang')||'de';
+setLang(saved);
 
-  langBtn.onclick = () => langBox.classList.toggle('open');
-  langBox.querySelectorAll('.lang-list button').forEach(btn=>{
-    btn.onclick = () => {
-      const code = btn.dataset.lang;
-      setLang(code);
-      localStorage.setItem('pantry_lang', code);
-      langBox.classList.remove('open');
-    };
+langBtn.onclick=()=>langBox.classList.toggle('open');
+langBox.querySelectorAll('.lang-list button').forEach(b=>{
+  b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');};
+});
+document.addEventListener('click',e=>{if(!langBox.contains(e.target)) langBox.classList.remove('open');});
+
+function setLang(code){
+  const L=T[code]||T.de;
+  document.documentElement.lang=code;
+  langLabel.textContent=L.label;
+  document.getElementById('welcome').textContent=L.welcome;
+  document.getElementById('choose').textContent=L.choose;
+  document.getElementById('t-stock').textContent=L.tiles.stock[0];
+  document.getElementById('d-stock').textContent=L.tiles.stock[1];
+  document.getElementById('t-markets').textContent=L.tiles.markets[0];
+  document.getElementById('d-markets').textContent=L.tiles.markets[1];
+  document.getElementById('t-shop').textContent=L.tiles.shop[0];
+  document.getElementById('d-shop').textContent=L.tiles.shop[1];
+  document.getElementById('t-overview').textContent=L.tiles.overview[0];
+  document.getElementById('d-overview').textContent=L.tiles.overview[1];
+}
+
+/* ===== Navigation (nur Anzeige wechseln) ===== */
+function nav(id){
+  ['home','stock','stockCats','stockAll'].forEach(x=>{
+    const el=document.getElementById(x); if(el) el.hidden=true;
   });
+  const target=document.getElementById(id);
+  if(target) target.hidden=false;
+  window.scrollTo(0,0);
+}
 
-  function setLang(code){
-    const L = T[code] || T.de;
-    document.documentElement.lang = code;
-    langLabel.textContent = L.label;
-    document.getElementById('welcome').textContent = L.welcome;
-    document.getElementById('choose').textContent = L.choose;
-    document.getElementById('t-inventory').textContent = L.tiles.inventory[0];
-    document.getElementById('d-inventory').textContent = L.tiles.inventory[1];
-    document.getElementById('t-markets').textContent = L.tiles.markets[0];
-    document.getElementById('d-markets').textContent = L.tiles.markets[1];
-    document.getElementById('t-shop').textContent = L.tiles.shop[0];
-    document.getElementById('d-shop').textContent = L.tiles.shop[1];
-    document.getElementById('t-dashboard').textContent = L.tiles.dashboard[0];
-    document.getElementById('d-dashboard').textContent = L.tiles.dashboard[1];
-    document.getElementById('hint').textContent = L.hint;
-  }
-
-  // --- Platzhalter für Kachel-Klicks (für später) ---
-  document.querySelectorAll('[data-nav]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const id = btn.getAttribute('data-nav');
-      alert('Öffne: '+id+' (Funktion kommt im nächsten Schritt)');
-    });
+/* ===== Home-Kacheln klicken ===== */
+document.querySelectorAll('[data-nav]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.getAttribute('data-nav');
+    if(id==='stock') nav('stock');
+    else alert('Diese Seite bauen wir als Nächstes: '+id);
   });
+});
 
-  // Close lang menu bei Klick außerhalb
-  document.addEventListener('click',(e)=>{
-    if(!langBox.contains(e.target)) langBox.classList.remove('open');
+/* ===== Bestand: Orte -> Kategorien ===== */
+const ALL_CATS=[
+  {name:'Backwaren',icon:'🍞'},
+  {name:'Getränke',icon:'🥤'},
+  {name:'Süßwaren',icon:'🍫'},
+  {name:'Gewürze',icon:'🧂'},
+  {name:'Konserven',icon:'🥫'},
+  {name:'Nudeln/Reis',icon:'🍝'},
+  {name:'Öle/Essig',icon:'🫗'},
+  {name:'Müsli/Frühstück',icon:'🥣'},
+  {name:'Snacks/Chips',icon:'🥨'},
+  {name:'Backzutaten',icon:'🧁'},
+  {name:'Reinigung',icon:'🧽'},
+  {name:'Gemüse/Obst',icon:'🥬'},
+  {name:'Fleisch/Fisch',icon:'🥩'},
+  {name:'Milchprodukte',icon:'🥛'},
+  {name:'Tiefkühl',icon:'❄️'},
+  {name:'Sonstiges',icon:'📦'}
+];
+
+let CURRENT_PLACE='';
+
+function openPlace(place){
+  CURRENT_PLACE=place;
+  document.getElementById('placeTitle').textContent='📍 '+place;
+  const grid=document.getElementById('catGrid');
+  grid.innerHTML='';
+  ALL_CATS.forEach(c=>{
+    const card=document.createElement('div');
+    card.className='catcard';
+    card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
+    // Hier wird später die Produktliste für (place + category) geöffnet
+    card.onclick=()=>alert(`Öffne Kategorie „${c.name}“ in „${place}“ (Produkte kommen im nächsten Schritt)`);
+    grid.appendChild(card);
   });
+  nav('stockCats');
+}
+
+function openAll(){
+  nav('stockAll');
+}
 </script>
 </body>
 </html>
