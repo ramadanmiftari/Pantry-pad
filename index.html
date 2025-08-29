@@ -15,7 +15,6 @@
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f6f7fb;color:var(--text)}
-  /* WICHTIG: sorgt dafür, dass versteckte Seiten wirklich weg sind */
   [hidden]{display:none !important;}
 
   /* HOME (Hero) */
@@ -27,18 +26,24 @@
   .lang.open .lang-list{display:block}
   .lang-list button{width:100%;text-align:left;padding:10px 12px;border:0;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:10px}
   .lang-list button:hover{background:#f8fafc}
+  .admin-toggle{display:flex;align-items:center;gap:8px;background:#fff;color:#111;border:0;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);cursor:pointer;font-size:15px}
 
   .wrap{display:grid;place-content:center;text-align:center;padding:24px;gap:20px}
   .title{font-size:clamp(24px,4vw,36px);font-weight:800;margin:0}
   .subtitle{opacity:.95;margin:0 0 6px;font-size:clamp(14px,2.2vw,18px)}
   .grid{width:min(980px,94vw);margin:18px auto 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .tile{background:var(--tile);color:#111;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .05s ease, background .2s ease}
+  .tile{position:relative;background:var(--tile);color:#111;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .05s ease, background .2s ease}
   .tile:active{transform:scale(.98)} .tile:hover{background:var(--tile-hover)}
   .icon{font-size:28px;line-height:1}
   .twrap{display:flex;flex-direction:column;align-items:flex-start}
   .tmain{font-weight:700;font-size:18px}
   .tmuted{color:var(--muted);font-size:14px}
   .hint{opacity:.9;font-size:13px;margin-top:8px}
+
+  /* Admin Badges */
+  .badgebar{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+  .badge{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer;box-shadow:var(--shadow);font-size:14px}
+  .add-tile{display:flex;align-items:center;justify-content:center;font-weight:700}
 
   /* Subpages */
   .page{min-height:100vh;display:grid;grid-template-rows:auto 1fr;background:#f6f7fb}
@@ -49,7 +54,7 @@
   /* Grids */
   .grid2{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
   .catgrid{width:min(1100px,96vw);margin:0 auto;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-  .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer}
+  .catcard{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;text-align:center;cursor:pointer;position:relative}
   .catcard .big{font-size:34px;margin-bottom:8px}
   .empty{padding:36px;text-align:center;color:#6b7280}
 </style>
@@ -58,7 +63,8 @@
 
 <!-- HOME -->
 <section id="home" class="hero">
-  <div class="topbar">
+  <div class="topbar" id="topbar">
+    <button id="adminBtn" class="admin-toggle">✏️ Bearbeiten</button>
     <div class="lang" id="langBox">
       <button id="langBtn">🌐 <span id="langLabel">Deutsch</span></button>
       <div class="lang-list">
@@ -73,24 +79,8 @@
   <div class="wrap">
     <h1 class="title" id="welcome">👋 Willkommen im Pantry Pad</h1>
     <p class="subtitle" id="choose">Bitte wähle eine Funktion:</p>
-    <div class="grid">
-      <button class="tile" onclick="nav('stock')">
-        <div class="icon">📦</div>
-        <div class="twrap"><div class="tmain" id="t-stock">Bestand</div><div class="tmuted" id="d-stock">Produkte nach Ort</div></div>
-      </button>
-      <button class="tile" onclick="alert('Supermärkte – kommt als Nächstes')">
-        <div class="icon">🏪</div>
-        <div class="twrap"><div class="tmain" id="t-markets">Supermärkte</div><div class="tmuted" id="d-markets">Lidl, Aldi, REWE …</div></div>
-      </button>
-      <button class="tile" onclick="alert('Einkauf – kommt als Nächstes')">
-        <div class="icon">🛒</div>
-        <div class="twrap"><div class="tmain" id="t-shop">Einkauf</div><div class="tmuted" id="d-shop">Fehlendes abhaken</div></div>
-      </button>
-      <button class="tile" onclick="alert('Übersicht – kommt als Nächstes')">
-        <div class="icon">📊</div>
-        <div class="twrap"><div class="tmain" id="t-overview">Übersicht</div><div class="tmuted" id="d-overview">MHD & Statistiken</div></div>
-      </button>
-    </div>
+    <div class="grid" id="homeGrid"></div>
+    <div class="hint" id="hint">(Kacheln kannst du im Bearbeiten-Modus anpassen)</div>
   </div>
 </section>
 
@@ -101,12 +91,7 @@
     <h3 style="margin:0">📦 Bestand</h3>
   </header>
   <div class="pagewrap">
-    <div class="grid2">
-      <button class="tile" onclick="openAll()"><span class="icon">📦</span><div class="twrap"><div class="tmain">Gesamtbestand</div><div class="tmuted">Alles auf einmal</div></div></button>
-      <button class="tile" onclick="openPlace('Vorratsschrank')"><span class="icon">🗄️</span><div class="twrap"><div class="tmain">Vorratsschrank</div><div class="tmuted">Trockene Lebensmittel</div></div></button>
-      <button class="tile" onclick="openPlace('Gefriertruhe')"><span class="icon">❄️</span><div class="twrap"><div class="tmain">Gefriertruhe</div><div class="tmuted">Tiefgekühltes</div></div></button>
-      <button class="tile" onclick="openPlace('Kühlschrank')"><span class="icon">🧊</span><div class="twrap"><div class="tmain">Kühlschrank</div><div class="tmuted">Frische Ware</div></div></button>
-    </div>
+    <div class="grid2" id="stockGrid"></div>
     <p class="hint">Tippe auf einen Ort, dann wählst du Kategorien wie an der SB-Kasse.</p>
   </div>
 </section>
@@ -157,27 +142,18 @@ const langBtn=document.getElementById('langBtn');
 const langLabel=document.getElementById('langLabel');
 const saved=localStorage.getItem('pantry_lang')||'de';
 setLang(saved);
-
 langBtn.onclick=()=>langBox.classList.toggle('open');
 langBox.querySelectorAll('.lang-list button').forEach(b=>{
   b.onclick=()=>{setLang(b.dataset.lang);localStorage.setItem('pantry_lang',b.dataset.lang);langBox.classList.remove('open');};
 });
 document.addEventListener('click',e=>{if(!langBox.contains(e.target)) langBox.classList.remove('open');});
-
 function setLang(code){
   const L=T[code]||T.de;
   document.documentElement.lang=code;
   langLabel.textContent=L.label;
   document.getElementById('welcome').textContent=L.welcome;
   document.getElementById('choose').textContent=L.choose;
-  document.getElementById('t-stock').textContent=L.tiles.stock[0];
-  document.getElementById('d-stock').textContent=L.tiles.stock[1];
-  document.getElementById('t-markets').textContent=L.tiles.markets[0];
-  document.getElementById('d-markets').textContent=L.tiles.markets[1];
-  document.getElementById('t-shop').textContent=L.tiles.shop[0];
-  document.getElementById('d-shop').textContent=L.tiles.shop[1];
-  document.getElementById('t-overview').textContent=L.tiles.overview[0];
-  document.getElementById('d-overview').textContent=L.tiles.overview[1];
+  // Home-Tiles Texte kommen aus Daten; Untertitel defaulten auf DE, aber du kannst sie editieren
 }
 
 /* ===== Navigation (robust) ===== */
@@ -191,7 +167,125 @@ function nav(id){
   window.scrollTo(0,0);
 }
 
-/* ===== Kategorien ===== */
+/* ===== Admin-Modus ===== */
+let ADMIN = JSON.parse(localStorage.getItem('pantry_admin')||'false');
+const adminBtn=document.getElementById('adminBtn');
+function updateAdminButton(){ adminBtn.textContent = ADMIN ? '✅ Bearbeiten AN' : '✏️ Bearbeiten'; }
+adminBtn.onclick=()=>{ ADMIN=!ADMIN; localStorage.setItem('pantry_admin',JSON.stringify(ADMIN)); renderHome(); renderStockPlaces(); updateAdminButton(); };
+updateAdminButton();
+
+/* ===== Daten: Home-Kacheln (editierbar) ===== */
+const HOME_DEFAULT=[
+  {id:'stock', icon:'📦', title:'Bestand', subtitle:'Produkte nach Ort', action:'nav("stock")'},
+  {id:'markets', icon:'🏪', title:'Supermärkte', subtitle:'Lidl, Aldi, REWE …', action:'alert("Supermärkte – kommt bald")'},
+  {id:'shop', icon:'🛒', title:'Einkauf', subtitle:'Fehlendes abhaken', action:'alert("Einkauf – kommt bald")'},
+  {id:'overview', icon:'📊', title:'Übersicht', subtitle:'MHD & Statistiken', action:'alert("Übersicht – kommt bald")'},
+];
+function loadHome(){ return JSON.parse(localStorage.getItem('home_tiles')||'null') || HOME_DEFAULT.slice(); }
+function saveHome(list){ localStorage.setItem('home_tiles', JSON.stringify(list)); }
+function renderHome(){
+  const grid=document.getElementById('homeGrid'); grid.innerHTML='';
+  const tiles=loadHome();
+  tiles.forEach((t,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='tile';
+    btn.innerHTML=`<div class="icon">${t.icon||'🔲'}</div><div class="twrap"><div class="tmain">${t.title||'Kachel'}</div><div class="tmuted">${t.subtitle||''}</div></div>`;
+    btn.onclick=()=>{ if(ADMIN) return; try{ eval(t.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
+    if(ADMIN){
+      const bar=document.createElement('div'); bar.className='badgebar';
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎';
+      edit.title='Bearbeiten'; edit.onclick=(ev)=>{ev.stopPropagation(); editHomeTile(idx);};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️';
+      del.title='Löschen'; del.onclick=(ev)=>{ev.stopPropagation(); deleteHomeTile(idx);};
+      bar.appendChild(edit); bar.appendChild(del); btn.appendChild(bar);
+    }
+    grid.appendChild(btn);
+  });
+  if(ADMIN){
+    const add=document.createElement('button');
+    add.className='tile add-tile';
+    add.innerHTML='＋ Kachel hinzufügen';
+    add.onclick=()=>addHomeTile();
+    grid.appendChild(add);
+  }
+}
+function editHomeTile(idx){
+  const tiles=loadHome(); const t=tiles[idx];
+  const title=prompt('Titel:', t.title||''); if(title===null) return;
+  const subtitle=prompt('Untertitel:', t.subtitle||''); if(subtitle===null) return;
+  const icon=prompt('Emoji/Icon (z.B. 📦):', t.icon||''); if(icon===null) return;
+  const action=prompt('Aktion (z.B. nav("stock") oder alert("Text")):', t.action||''); if(action===null) return;
+  tiles[idx]={...t,title,subtitle,icon,action}; saveHome(tiles); renderHome();
+}
+function deleteHomeTile(idx){
+  const tiles=loadHome(); if(tiles.length<=1){ alert('Mindestens 1 Kachel muss bleiben.'); return; }
+  if(confirm('Diese Kachel löschen?')){ tiles.splice(idx,1); saveHome(tiles); renderHome(); }
+}
+function addHomeTile(){
+  const tiles=loadHome();
+  const title=prompt('Titel der neuen Kachel:','Neue Kachel'); if(title===null) return;
+  const subtitle=prompt('Untertitel:',''); if(subtitle===null) return;
+  const icon=prompt('Emoji/Icon (z.B. ⭐):','⭐'); if(icon===null) return;
+  const action=prompt('Aktion (z.B. alert("Hallo")):','alert("Platzhalter")'); if(action===null) return;
+  tiles.push({id:'custom_'+Date.now(), icon, title, subtitle, action});
+  saveHome(tiles); renderHome();
+}
+
+/* ===== Bestand → Orte (editierbar) ===== */
+const PLACES_DEFAULT=[
+  {id:'all', icon:'📦', title:'Gesamtbestand', subtitle:'Alles auf einmal', action:'openAll()'},
+  {id:'pantry', icon:'🗄️', title:'Vorratsschrank', subtitle:'Trockene Lebensmittel', action:'openPlace("Vorratsschrank")'},
+  {id:'freezer', icon:'❄️', title:'Gefriertruhe', subtitle:'Tiefgekühltes', action:'openPlace("Gefriertruhe")'},
+  {id:'fridge', icon:'🧊', title:'Kühlschrank', subtitle:'Frische Ware', action:'openPlace("Kühlschrank")'},
+];
+function loadPlaces(){ return JSON.parse(localStorage.getItem('stock_places')||'null') || PLACES_DEFAULT.slice(); }
+function savePlaces(list){ localStorage.setItem('stock_places', JSON.stringify(list)); }
+function renderStockPlaces(){
+  const grid=document.getElementById('stockGrid'); grid.innerHTML='';
+  const places=loadPlaces();
+  places.forEach((p,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='tile';
+    btn.innerHTML=`<span class="icon">${p.icon||'📦'}</span><div class="twrap"><div class="tmain">${p.title||''}</div><div class="tmuted">${p.subtitle||''}</div></div>`;
+    btn.onclick=()=>{ if(ADMIN) return; try{ eval(p.action||''); }catch(e){ alert('Keine Aktion hinterlegt'); } };
+    if(ADMIN){
+      const bar=document.createElement('div'); bar.className='badgebar';
+      const edit=document.createElement('button'); edit.className='badge'; edit.textContent='✎'; edit.title='Bearbeiten';
+      edit.onclick=(ev)=>{ev.stopPropagation(); editPlaceTile(idx);};
+      const del=document.createElement('button'); del.className='badge'; del.textContent='🗑️'; del.title='Löschen';
+      del.onclick=(ev)=>{ev.stopPropagation(); deletePlaceTile(idx);};
+      bar.appendChild(edit); bar.appendChild(del); btn.appendChild(bar);
+    }
+    grid.appendChild(btn);
+  });
+  if(ADMIN){
+    const add=document.createElement('button'); add.className='tile add-tile'; add.textContent='＋ Ort hinzufügen';
+    add.onclick=()=>addPlaceTile(); grid.appendChild(add);
+  }
+}
+function editPlaceTile(idx){
+  const places=loadPlaces(); const p=places[idx];
+  const title=prompt('Titel (Ort):', p.title||''); if(title===null) return;
+  const subtitle=prompt('Untertitel:', p.subtitle||''); if(subtitle===null) return;
+  const icon=prompt('Emoji/Icon (z.B. 🗄️):', p.icon||''); if(icon===null) return;
+  const action=prompt('Aktion (z.B. openPlace("Vorratsschrank")):', p.action||''); if(action===null) return;
+  places[idx]={...p,title,subtitle,icon,action}; savePlaces(places); renderStockPlaces();
+}
+function deletePlaceTile(idx){
+  const places=loadPlaces(); if(places.length<=1){ alert('Mindestens 1 Ort muss bleiben.'); return; }
+  if(confirm('Diesen Ort löschen?')){ places.splice(idx,1); savePlaces(places); renderStockPlaces(); }
+}
+function addPlaceTile(){
+  const places=loadPlaces();
+  const title=prompt('Titel des Ortes:','Neuer Ort'); if(title===null) return;
+  const subtitle=prompt('Untertitel:',''); if(subtitle===null) return;
+  const icon=prompt('Emoji/Icon (z.B. 🗂️):','🗂️'); if(icon===null) return;
+  const action=prompt('Aktion (z.B. openPlace("Vorratsraum")):','alert("Platzhalter-Ort")'); if(action===null) return;
+  places.push({id:'place_'+Date.now(), icon, title, subtitle, action});
+  savePlaces(places); renderStockPlaces();
+}
+
+/* ===== Kategorien (wie SB-Kasse) ===== */
 const ALL_CATS=[
   {name:'Backwaren',icon:'🍞'},
   {name:'Getränke',icon:'🥤'},
@@ -210,27 +304,31 @@ const ALL_CATS=[
   {name:'Tiefkühl',icon:'❄️'},
   {name:'Sonstiges',icon:'📦'}
 ];
-
 let CURRENT_PLACE='';
-
 function openPlace(place){
   CURRENT_PLACE=place;
   document.getElementById('placeTitle').textContent='📍 '+place;
-  const grid=document.getElementById('catGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById('catGrid'); grid.innerHTML='';
   ALL_CATS.forEach(c=>{
     const card=document.createElement('div');
     card.className='catcard';
     card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
     card.onclick=()=>alert(`Öffne Kategorie „${c.name}“ in „${place}“ (Produkte kommen im nächsten Schritt)`);
+    if(ADMIN){
+      const bar=document.createElement('div'); bar.className='badgebar';
+      const info=document.createElement('div'); info.className='badge'; info.textContent='ℹ︎';
+      info.title='Kategorien sind vordefiniert – anpassbar kommt später';
+      bar.appendChild(info); card.appendChild(bar);
+    }
     grid.appendChild(card);
   });
   nav('stockCats');
 }
+function openAll(){ nav('stockAll'); }
 
-function openAll(){
-  nav('stockAll');
-}
+/* ===== Init ===== */
+function renderAll(){ renderHome(); renderStockPlaces(); }
+renderAll();
 </script>
 </body>
 </html>
