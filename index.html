@@ -72,12 +72,23 @@
     <h1 class="title" id="welcome">👋 Willkommen im Pantry Pad</h1>
     <p class="subtitle" id="choose">Bitte wähle eine Funktion:</p>
     <div class="grid">
-      <button class="tile" data-nav="stock"><div class="icon">📦</div><div class="twrap"><div class="tmain" id="t-stock">Bestand</div><div class="tmuted" id="d-stock">Produkte nach Ort</div></div></button>
-      <button class="tile" data-nav="markets"><div class="icon">🏪</div><div class="twrap"><div class="tmain" id="t-markets">Supermärkte</div><div class="tmuted" id="d-markets">Lidl, Aldi, REWE …</div></div></button>
-      <button class="tile" data-nav="shop"><div class="icon">🛒</div><div class="twrap"><div class="tmain" id="t-shop">Einkauf</div><div class="tmuted" id="d-shop">Fehlendes abhaken</div></div></button>
-      <button class="tile" data-nav="overview"><div class="icon">📊</div><div class="twrap"><div class="tmain" id="t-overview">Übersicht</div><div class="tmuted" id="d-overview">MHD & Statistiken</div></div></button>
+      <button class="tile" onclick="nav('stock')">
+        <div class="icon">📦</div>
+        <div class="twrap"><div class="tmain" id="t-stock">Bestand</div><div class="tmuted" id="d-stock">Produkte nach Ort</div></div>
+      </button>
+      <button class="tile" onclick="alert('Supermärkte – kommt als Nächstes')">
+        <div class="icon">🏪</div>
+        <div class="twrap"><div class="tmain" id="t-markets">Supermärkte</div><div class="tmuted" id="d-markets">Lidl, Aldi, REWE …</div></div>
+      </button>
+      <button class="tile" onclick="alert('Einkauf – kommt als Nächstes')">
+        <div class="icon">🛒</div>
+        <div class="twrap"><div class="tmain" id="t-shop">Einkauf</div><div class="tmuted" id="d-shop">Fehlendes abhaken</div></div>
+      </button>
+      <button class="tile" onclick="alert('Übersicht – kommt als Nächstes')">
+        <div class="icon">📊</div>
+        <div class="twrap"><div class="tmain" id="t-overview">Übersicht</div><div class="tmuted" id="d-overview">MHD & Statistiken</div></div>
+      </button>
     </div>
-    <div class="hint" id="hint">(Kacheln sind Platzhalter – Funktionalität fügen wir als Nächstes hinzu)</div>
   </div>
 </section>
 
@@ -167,7 +178,7 @@ function setLang(code){
   document.getElementById('d-overview').textContent=L.tiles.overview[1];
 }
 
-/* ===== Navigation (nur Anzeige wechseln) ===== */
+/* ===== Navigation ===== */
 function nav(id){
   ['home','stock','stockCats','stockAll'].forEach(x=>{
     const el=document.getElementById(x); if(el) el.hidden=true;
@@ -177,16 +188,7 @@ function nav(id){
   window.scrollTo(0,0);
 }
 
-/* ===== Home-Kacheln klicken ===== */
-document.querySelectorAll('[data-nav]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const id=btn.getAttribute('data-nav');
-    if(id==='stock') nav('stock');
-    else alert('Diese Seite bauen wir als Nächstes: '+id);
-  });
-});
-
-/* ===== Bestand: Orte -> Kategorien ===== */
+/* ===== Kategorien ===== */
 const ALL_CATS=[
   {name:'Backwaren',icon:'🍞'},
   {name:'Getränke',icon:'🥤'},
@@ -217,7 +219,6 @@ function openPlace(place){
     const card=document.createElement('div');
     card.className='catcard';
     card.innerHTML=`<div class="big">${c.icon}</div><div><b>${c.name}</b></div>`;
-    // Hier wird später die Produktliste für (place + category) geöffnet
     card.onclick=()=>alert(`Öffne Kategorie „${c.name}“ in „${place}“ (Produkte kommen im nächsten Schritt)`);
     grid.appendChild(card);
   });
