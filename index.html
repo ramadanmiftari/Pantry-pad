@@ -6,363 +6,240 @@
 <title>Pantry Pad</title>
 <style>
 :root{
-  --bg:#f6f7fb; --card:#fff; --line:#e5e7eb; --shadow:0 8px 22px rgba(0,0,0,.10);
-  --radius:18px; --gap:14px; --brand:#6a5cff; --brand2:#20c997; --danger:#ff8a80;
+ --bg:#f6f7fb; --card:#fff; --line:#e5e7eb; --shadow:0 8px 22px rgba(0,0,0,.10);
+ --brand:#6a5cff; --brand2:#20c997; --danger:#ff8a80;
 }
-*{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#222;transition:background .3s,color .3s}
-body.dark{--bg:#1e1e1e;--card:#2a2a2a;--line:#444;--shadow:0 6px 18px rgba(0,0,0,.6);color:#eee}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#222}
+[hidden]{display:none!important}
+
+/* THEMES */
+body.dark{--bg:#1e1e1e;--card:#2a2a2a;--line:#444;color:#eee}
+body.colorful{--bg:#f0f8ff;--card:#fffaf0}
+body.muslim{--bg:#f3f8f3;--card:#fff;border-color:#d4af37}
+body.kids{--bg:#fff0f6;--card:#fef9ff}
+body.xmas{--bg:#fef6f6;--card:#fff;border-color:#c00}
+body.spring{--bg:#f0fff0;--card:#fff}
 
 /* HOME */
-.home{min-height:100vh;display:grid;gap:22px;grid-auto-rows:min-content;place-content:center;padding:26px;background:linear-gradient(135deg,#6a5cff 0%,#20c997 100%);color:#fff;text-align:center}
-.home h1{margin:0 0 6px;font-size:1.9rem}
-.subtitle{opacity:.9;margin:0 0 12px}
-.choices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));width:min(900px,96vw);margin:0 auto}
-.choice{display:flex;align-items:center;gap:12px;padding:18px;border-radius:16px;border:none;cursor:pointer;background:#fff;color:#222;box-shadow:var(--shadow);font-size:1.05rem;text-align:left}
+.home{min-height:100vh;display:grid;gap:22px;place-content:center;padding:26px;background:linear-gradient(135deg,#6a5cff,#20c997);color:#fff;text-align:center}
+.topbar{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin-bottom:6px}
+.topbar select,.topbar button{padding:8px 12px;border-radius:10px;border:1px solid #fff;background:#fff;color:#222}
+.choices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));width:min(900px,96vw);margin:0 auto}
+.choice{display:flex;align-items:center;gap:12px;padding:18px;border-radius:16px;border:none;cursor:pointer;background:#fff;color:#222;box-shadow:var(--shadow);font-size:1rem;text-align:left}
 .choice .icon{font-size:1.6rem}
-.choice.view{border-left:10px solid var(--brand2)}
-.choice.shop{border-left:10px solid #ff7ab6}
-.choice.dash{border-left:10px solid #66d9e8}
-.choice.market{border-left:10px solid #ffd43b}
-.choice.edit{border-left:10px solid var(--brand)}
-.choice.book{border-left:10px solid #ffa94d}
-.choice.settings{border-left:10px solid #888}
 
 /* HEADER */
-header{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;box-shadow:var(--shadow);position:sticky;top:0;z-index:8}
+header{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;box-shadow:var(--shadow);position:sticky;top:0;z-index:10}
 header h1{margin:0;font-size:1.1rem}
-header input,header select{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
-header button{padding:10px 12px;border:none;border-radius:10px;background:var(--brand);color:#fff;font-size:1rem;white-space:nowrap}
+header input,header select{padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:1rem}
+header button{padding:8px 12px;border:none;border-radius:8px;background:var(--brand);color:#fff;font-size:1rem}
 header .ghost{background:#fff;color:#333;border:1px solid var(--line)}
-.wrap{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 60px)}
-aside{background:#fff;border-right:1px solid var(--line);padding:12px}
-.aside-title{font-weight:600;margin:4px 0 10px 2px}
-.cat-list{display:flex;flex-direction:column;gap:8px}
-.cat{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafafa;cursor:pointer}
-.cat.active{background:#eaf2ff;border-color:#bcd4ff}
-main{padding:14px}
-.grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
-.tile{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.tile{position:relative;background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
 .imgwrap{width:100%;aspect-ratio:1/1;background:#eee;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .tile img{width:100%;height:100%;object-fit:cover}
 .body{padding:12px}
-.name{font-weight:700;line-height:1.2}
-.meta{font-size:.92rem;color:#555;margin-top:6px}
-.ribbon{position:absolute;top:10px;left:10px;padding:6px 8px;border-radius:10px;font-size:.8rem;background:#fff3cd;color:#7a4e00;box-shadow:var(--shadow)}
+.name{font-weight:700}
+.meta{font-size:.9rem;color:#555;margin-top:4px}
+.ribbon{position:absolute;top:8px;left:8px;padding:4px 8px;border-radius:8px;font-size:.8rem;background:#fff3cd;color:#7a4e00}
 .ribbon.exp{background:#fde2e0;color:#8b1a1a}
-.quick{display:flex;gap:6px;margin-top:10px}
-.quick button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px}
-.footerbar{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line);background:#fff;position:sticky;bottom:0;z-index:7}
-.footerbar small{color:#666;margin-left:auto}
-.empty{text-align:center;color:#777;padding:40px}
 
-/* Pages */
-.page{padding:16px}
-.section-title{font-weight:800;margin:10px 0 12px;font-size:1.2rem}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:10px}
+/* AI */
+.ai-side{position:fixed;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none;text-align:center}
+.ai-left{left:6px}.ai-right{right:6px}
+.ai-fig{width:72px;height:72px;border-radius:50%;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.25);background:#fff;border:2px solid #fff;animation:blink 4s infinite}
+@keyframes blink{0%,90%,100%{transform:scale(1)}95%{transform:scaleY(.9)}}
+.ai-speech{margin-top:6px;max-width:160px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:.8rem;color:#333;display:none}
 
 /* Dialog */
-dialog{width:min(560px,96vw);border:none;border-radius:18px;padding:0;box-shadow:var(--shadow)}
-dialog header,dialog footer{padding:12px 16px}
-dialog header{border-bottom:1px solid var(--line)}
-dialog form{padding:16px;display:grid;gap:10px}
-dialog input,dialog textarea,dialog select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
-dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
-.danger{background:var(--danger);color:#fff;border:none}
-.primary{background:var(--brand2);color:#fff;border:none}
-.ghost2{background:#fff;border:1px solid var(--line)}
-
-/* AI Figures */
-.ai-side{position:fixed;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none;text-align:center}
-.ai-left{left:6px}
-.ai-right{right:6px}
-.ai-fig{width:72px;height:72px;border-radius:50%;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.25);background:#fff;border:2px solid #fff;animation:blink 4s infinite}
-@keyframes blink{0%,90%,100%{transform:scale(1)}95%{transform:scaleY(.8)}}
-.ai-speech{margin-top:8px;max-width:180px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:8px 10px;font-size:.9rem;color:#333;display:none}
-
-/* Flags */
-.flag{width:20px;height:14px;vertical-align:middle;margin-right:4px}
+dialog{width:min(500px,96vw);border:none;border-radius:12px;padding:0;box-shadow:var(--shadow)}
+dialog form{padding:16px;display:grid;gap:8px}
+dialog input,dialog select{padding:8px;border:1px solid var(--line);border-radius:8px}
+dialog footer{display:flex;justify-content:flex-end;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.primary{background:var(--brand2);color:#fff;border:none;padding:8px 12px;border-radius:8px}
+.ghost2{background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:8px}
 </style>
 </head>
 <body>
+
 <!-- HOME -->
 <section id="home" class="home">
-  <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:10px">
-    <select id="langHome">
-      <option value="de">🇩🇪 Deutsch</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="tr">🇹🇷 Türkçe</option>
-    </select>
-    <button id="loginBtn" class="ghost">🔑 Login</button>
-  </div>
-  <h1>👋 Willkommen im Pantry Pad</h1>
-  <p class="subtitle">Was möchtest du tun?</p>
-  <div class="choices" id="homeChoices"></div>
+ <div class="topbar">
+  <select id="langHome">
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="tr">🇹🇷 Türkçe</option>
+  </select>
+  <button id="loginBtn">🔑 Login</button>
+ </div>
+ <h1>👋 Willkommen im Pantry Pad</h1>
+ <p>Wähle eine Funktion:</p>
+ <div class="choices" id="homeChoices"></div>
 </section>
 
-<!-- App Shell -->
+<!-- APP -->
 <section id="app" hidden>
-  <header>
-    <button id="backHome" class="ghost">🏠</button>
-    <h1 id="appTitle">Pantry Pad</h1>
-    <input id="q" placeholder="Suchen …"/>
-    <select id="locFilter"><option value="">Alle Orte</option><option>Vorratsschrank</option><option>Kühlschrank</option><option>Gefrierfach</option></select>
-    <button id="add">+ Produkt</button>
-    <select id="lang"><option value="de">🇩🇪</option><option value="en">🇬🇧</option><option value="tr">🇹🇷</option></select>
-  </header>
-  <div class="wrap">
-    <aside><div class="aside-title" id="catTitle">Kategorien</div><div id="cats" class="cat-list"></div></aside>
-    <main><div id="grid" class="grid"></div><div id="empty" class="empty" hidden>Keine Produkte.</div></main>
-  </div>
-  <div class="footerbar">
-    <button id="export" class="ghost2">⬇️ Export</button>
-    <button id="importBtn" class="ghost2">⬆️ Import</button>
-    <input id="importFile" type="file" accept="application/json" style="display:none">
-    <label>Warnung in <input id="soonDays" type="number" min="1" max="90" value="14" style="width:64px"> Tagen</label>
-  </div>
+ <header>
+  <button onclick="go('home')" class="ghost">🏠</button>
+  <h1 id="appTitle">Pantry</h1>
+  <input id="q" placeholder="Suchen …">
+  <select id="locFilter"><option value="">Alle Orte</option><option>Vorratsschrank</option><option>Kühlschrank</option><option>Gefrierfach</option></select>
+  <button id="add">+ Produkt</button>
+  <select id="lang"><option value="de">🇩🇪</option><option value="en">🇬🇧</option><option value="tr">🇹🇷</option></select>
+ </header>
+ <main><div id="grid" class="grid"></div><div id="empty" hidden>Keine Produkte.</div></main>
 </section>
 
-<!-- weitere Seiten (Shop, Dashboard, Märkte, Kochbuch, Settings etc.) -->
-<!-- ... der restliche JavaScript-Teil wäre hier sehr umfangreich -->
+<!-- SHOP -->
+<section id="shopPage" class="page" hidden>
+ <header><button onclick="go('home')" class="ghost">🏠</button><h1>🛒 Einkaufsliste</h1></header>
+ <div id="shopList"></div>
+</section>
 
-</body>
-</html><script>
-/* ===== I18N (Übersetzungen) ===== */
-const I18N={
-  de:{title:'Pantry Pad',none:'Keine Produkte.','expired':'Abgelaufen',soon:n=>`Bald (${n}T)`,mhd:d=>`MHD: ${d}`},
-  en:{title:'Pantry Pad',none:'No items.','expired':'Expired',soon:n=>`Soon (${n}d)`,mhd:d=>`Exp: ${d}`},
-  tr:{title:'Kiler Paneli',none:'Ürün yok.','expired':'Süresi geçti',soon:n=>`Yakında (${n}g)`,mhd:d=>`SKT: ${d}`}
-};
-let LANG=localStorage.getItem('pantry-lang')||'de';
-let IS_ADMIN=false;
+<!-- DASHBOARD -->
+<section id="dashPage" class="page" hidden>
+ <header><button onclick="go('home')" class="ghost">🏠</button><h1>📊 Dashboard</h1></header>
+ <div id="dashSoon"></div><div id="dashExp"></div><div id="dashTotal"></div>
+</section>
 
-/* ===== IndexedDB (Speicher) ===== */
-const DB='pantry-db-v3', STORE='items'; let db;
-const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1); r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'}); r.onsuccess=()=>{db=r.result;res();}; r.onerror=()=>rej(r.error);});
-const st=(m='readonly')=>db.transaction(STORE,m).objectStore(STORE);
-const getAll=()=>new Promise((res,rej)=>{const q=st().getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error);});
-const put=(it)=>new Promise((res,rej)=>{const q=st('readwrite').put(it); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
-const delItem=(id)=>new Promise((res,rej)=>{const q=st('readwrite').delete(id); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+<!-- MARKETS -->
+<section id="marketPage" class="page" hidden>
+ <header><button onclick="go('home')" class="ghost">🏠</button><h1>🏪 Supermärkte</h1></header>
+ <div id="marketGrid" class="grid"></div>
+</section>
 
-/* ===== Hilfsfunktionen ===== */
-const esc=s=>s?.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))||'';
-const daysUntil=ds=>{if(!ds) return null; const n=new Date(); n.setHours(0,0,0,0); const d=new Date(ds+'T00:00:00'); return Math.floor((d-n)/86400000);};
-function seedImage(emoji,bg){const svg=encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'><rect width='100%' height='100%' rx='40' ry='40' fill='${bg}'/><text x='50%' y='55%' text-anchor='middle' font-size='400'>${emoji}</text></svg>`);return `data:image/svg+xml;charset=utf-8,${svg}`;}
-
-/* ===== Startseite (Kacheln) ===== */
-function buildHome(){
-  const wrap=document.getElementById('homeChoices'); wrap.innerHTML='';
-  const base=[
-    {id:'inventory-view',icon:'👀',title:'Nachschauen'},
-    {id:'shop',icon:'🛒',title:'Einkaufsliste'},
-    {id:'dashboard',icon:'📊',title:'Dashboard'},
-    {id:'markets',icon:'🏪',title:'Supermärkte'},
-  ];
-  const admin=[
-    {id:'inventory-edit',icon:'✏️',title:'Bearbeiten'},
-    {id:'cookbook',icon:'📖',title:'Kochbuch'},
-    {id:'settings',icon:'⚙️',title:'Einstellungen'}
-  ];
-  const all=IS_ADMIN?[...base,...admin]:base;
-  all.forEach(c=>{
-    const btn=document.createElement('button'); btn.className='choice'; btn.dataset.go=c.id;
-    btn.innerHTML=`<span class="icon">${c.icon}</span><span><strong>${c.title}</strong></span>`;
-    btn.onclick=()=>go(c.id); wrap.appendChild(btn);
-  });
-}
-
-/* ===== Inventar-Ansicht ===== */
-async function renderInventory(){
-  const all=await getAll();
-  const grid=document.getElementById('grid'), empty=document.getElementById('empty');
-  grid.innerHTML='';
-  const items=all.filter(i=>!i.archived);
-  if(!items.length){ empty.hidden=false; empty.textContent=I18N[LANG].none; return; }
-  empty.hidden=true;
-  items.forEach(it=>{
-    const d=daysUntil(it.mhd);
-    const soon=d!==null && d>=0 && d<=Number(document.getElementById('soonDays').value||14);
-    const exp=d!==null && d<0;
-    const card=document.createElement('div'); card.className='tile';
-    const img=document.createElement('img'); img.src=it.imgData||it.imgUrl||seedImage('📦','#eee'); img.className='imgwrap'; card.appendChild(img);
-    if(soon||exp){ const r=document.createElement('div'); r.className='ribbon'+(exp?' exp':''); r.textContent=exp?I18N[LANG].expired:I18N[LANG].soon(d); card.appendChild(r);}
-    const body=document.createElement('div'); body.className='body';
-    body.innerHTML=`<div class="name">${esc(it.name)}</div><div class="meta">${it.qty||0} ${it.unit||''} ${it.mhd?I18N[LANG].mhd(it.mhd):''}</div>`;
-    if(IS_ADMIN){
-      const qdiv=document.createElement('div'); qdiv.className='quick';
-      ['-1','+1'].forEach(sym=>{
-        const b=document.createElement('button'); b.textContent=sym; b.onclick=async()=>{it.qty=(it.qty||0)+(sym==='+1'?1:-1); if(it.qty<0) it.qty=0; await put(it); renderInventory();}; qdiv.appendChild(b);
-      });
-      body.appendChild(qdiv);
-    }
-    card.appendChild(body); grid.appendChild(card);
-  });
-}
-
-/* ===== Einkaufsliste ===== */
-async function renderShop(){
-  const all=await getAll(); const list=document.getElementById('shopList'); list.innerHTML='';
-  const items=all.filter(i=>(i.qty||0)===0);
-  if(!items.length){ list.innerHTML='<p>Alles da ✅</p>'; return; }
-  items.forEach(it=>{
-    const row=document.createElement('div'); row.className='stat'; row.textContent=it.name;
-    if(IS_ADMIN){ const b=document.createElement('button'); b.textContent='✅'; b.onclick=async()=>{it.qty=1; await put(it); renderShop(); renderInventory();}; row.appendChild(b);}
-    list.appendChild(row);
-  });
-}
-
-/* ===== Dashboard ===== */
-async function renderDash(){
-  const all=await getAll();
-  const soonList=document.getElementById('soonList'), expList=document.getElementById('expList'), total=document.getElementById('totalStat');
-  const soon=all.filter(i=>{const d=daysUntil(i.mhd);return d!==null&&d>=0&&d<=14;});
-  const exp=all.filter(i=>{const d=daysUntil(i.mhd);return d!==null&&d<0;});
-  soonList.innerHTML=soon.map(i=>'• '+i.name).join('<br>')||'—';
-  expList.innerHTML=exp.map(i=>'• '+i.name).join('<br>')||'—';
-  total.textContent='Gesamt: '+all.length;
-}
-
-/* ===== Supermärkte ===== */
-function renderMarkets(){
-  const markets=[
-    {name:'Lidl',icon:'🟡',link:'https://www.lidl.de/c/angebote'},
-    {name:'Aldi',icon:'🔷',link:'https://www.aldi.de'},
-    {name:'Rewe',icon:'🟥',link:'https://www.rewe.de/angebote'},
-    {name:'Action',icon:'🟣',link:'https://www.action.com/de-de'},
-    {name:'Türkischer Markt',icon:'🕌',link:'#'}
-  ];
-  const grid=document.getElementById('marketGrid'); grid.innerHTML='';
-  markets.forEach(m=>{
-    const card=document.createElement('div'); card.className='tile';
-    card.innerHTML=`<div class="imgwrap">${m.icon}</div><div class="body"><div class="name">${m.name}</div><a href="${m.link}" target="_blank">Prospekt ▶️</a></div>`;
-    grid.appendChild(card);
-  });
-}
-
-/* ===== Navigation ===== */
-function go(where){
-  ['home','app','shopPage','dashPage','marketPage','cookPage','settingsPage'].forEach(id=>document.getElementById(id)?.setAttribute('hidden',true));
-  if(where==='home'){document.getElementById('home').hidden=false; buildHome();}
-  if(where==='inventory-view'||where==='inventory-edit'){document.getElementById('app').hidden=false; renderInventory();}
-  if(where==='shop'){document.getElementById('shopPage').hidden=false; renderShop();}
-  if(where==='dashboard'){document.getElementById('dashPage').hidden=false; renderDash();}
-  if(where==='markets'){document.getElementById('marketPage').hidden=false; renderMarkets();}
-  if(where==='cookbook'){document.getElementById('cookPage').hidden=false; renderCook();}
-  if(where==='settings'){document.getElementById('settingsPage').hidden=false;}
-}
-
-/* ===== Login ===== */
-document.getElementById('loginBtn').onclick=()=>{
-  const pin=prompt('Admin PIN eingeben (z.B. 1234):');
-  if(pin==='1234'){IS_ADMIN=true;alert('Admin-Modus aktiviert');buildHome();}
-  else{alert('Falsch');}
-};
-
-/* ===== Sprache ändern ===== */
-document.getElementById('langHome').onchange=e=>{LANG=e.target.value;localStorage.setItem('pantry-lang',LANG);buildHome();renderInventory();}
-document.getElementById('lang').onchange=e=>{LANG=e.target.value;localStorage.setItem('pantry-lang',LANG);renderInventory();}
-
-/* ===== Init ===== */
-(async()=>{await openDB();buildHome();})();
-</script><script>
-/* ===== Kochbuch ===== */
-const RECIPES=[
-  {id:'r1',title:'Menemen',video:'https://www.youtube.com/results?search_query=menemen+sally',
-   ingredients:['Eier','Tomaten','Paprika','Öl','Salz']},
-  {id:'r2',title:'Pfannkuchen',video:'https://www.youtube.com/results?search_query=pfannkuchen+sally',
-   ingredients:['Mehl','Milch','Ei','Zucker']}
-];
-function renderCook(){
-  const grid=document.getElementById('recipesGrid'); grid.innerHTML='';
-  RECIPES.forEach(r=>{
-    const card=document.createElement('div'); card.className='tile';
-    card.innerHTML=`<div class="imgwrap">🍳</div><div class="body"><div class="name">${r.title}</div><a href="${r.video}" target="_blank">▶️ Video</a></div>`;
-    grid.appendChild(card);
-  });
-}
-
-/* ===== Settings ===== */
-function renderSettings(){
-  const box=document.getElementById('settingsBox');
-  box.innerHTML=`
-    <div class="stat"><strong>Theme</strong><br>
-      <button onclick="document.body.classList.toggle('dark')">🌙 Dark Mode</button>
-    </div>
-    <div class="stat"><strong>Senior-Modus</strong><br>
-      <button onclick="toggleSenior()">👵 Einfach Ansicht</button>
-    </div>
-    <div class="stat"><strong>Assistenten</strong><br>
-      <button onclick="toggleAI()">🤖 Figuren an/aus</button>
-    </div>
-  `;
-}
-function toggleSenior(){document.body.classList.toggle('senior');}
-function toggleAI(){document.getElementById('aiIlyan').hidden=!document.getElementById('aiIlyan').hidden;
-                    document.getElementById('aiLiaz').hidden=!document.getElementById('aiLiaz').hidden;}
-
-/* ===== AI Figuren ===== */
-function drawAvatar(el,name,color){
-  const m=new Date().getMonth()+1;
-  let acc=''; if([12,1,2].includes(m))acc='🧣'; if([6,7,8].includes(m))acc='🕶️'; if([9,10].includes(m))acc='🍁';
-  el.innerHTML=`<svg viewBox="0 0 100 100" width="72" height="72">
-    <circle cx="50" cy="50" r="48" fill="${color}"/>
-    <text x="50" y="55" text-anchor="middle" font-size="36">😊</text>
-    <text x="85" y="25" font-size="20">${acc}</text>
-  </svg>`;
-}
-const LINES_I=['Ich checke dein MHD 👀','Bald läuft was ab','Schau in den Kühlschrank!'];
-const LINES_L=['Ich mach die Liste 🛒','Milch fehlt?','Zeit für den Einkauf!'];
-function rotateLines(){
-  document.getElementById('msgIlyan').textContent=LINES_I[Math.floor(Math.random()*LINES_I.length)];
-  document.getElementById('msgLiaz').textContent=LINES_L[Math.floor(Math.random()*LINES_L.length)];
-}
-setInterval(rotateLines,8000);
-
-/* ===== Sprachsteuerung (Browser SpeechRecognition) ===== */
-function startSpeech(){
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SpeechRecognition)return alert('Keine Sprachsteuerung im Browser');
-  const rec=new SpeechRecognition(); rec.lang=(LANG==='tr'?'tr-TR':LANG==='en'?'en-US':'de-DE');
-  rec.onresult=async e=>{
-    const t=e.results[0][0].transcript.toLowerCase();
-    alert('Erkannt: '+t);
-    if(t.includes('milch')){await put({id:crypto.randomUUID(),name:'Milch',qty:1,unit:'Pack'});renderInventory();}
-  };
-  rec.start();
-}
-
-/* ===== Barcode Scanner (Platzhalter) ===== */
-function startScanner(){
-  alert('📷 Barcode-Scanner hier einfügen (QuaggaJS o.ä.)');
-}
-
-/* ===== DOM für Zusatzseiten ===== */
-document.body.insertAdjacentHTML('beforeend',`
-<!-- Kochbuch -->
+<!-- COOKBOOK -->
 <section id="cookPage" class="page" hidden>
-  <header><button class="ghost" onclick="go('home')">🏠</button><h1>📖 Kochbuch</h1></header>
-  <div id="recipesGrid" class="grid"></div>
+ <header><button onclick="go('home')" class="ghost">🏠</button><h1>📖 Kochbuch</h1></header>
+ <div id="recipesGrid" class="grid"></div>
 </section>
 
-<!-- Settings -->
+<!-- SETTINGS -->
 <section id="settingsPage" class="page" hidden>
-  <header><button class="ghost" onclick="go('home')">🏠</button><h1>⚙️ Einstellungen</h1></header>
-  <div id="settingsBox"></div>
+ <header><button onclick="go('home')" class="ghost">🏠</button><h1>⚙️ Einstellungen</h1></header>
+ <div id="settingsBox"></div>
 </section>
 
-<!-- AI Figuren -->
-<div id="aiIlyan" class="ai-side ai-left"><div class="ai-fig" id="avIlyan"></div><div id="msgIlyan" class="ai-speech">Hallo</div></div>
-<div id="aiLiaz" class="ai-side ai-right"><div class="ai-fig" id="avLiaz"></div><div id="msgLiaz" class="ai-speech">Hi</div></div>
+<!-- AI Figures -->
+<div id="aiIlyan" class="ai-side ai-left" hidden><div class="ai-fig">😊</div><div id="msgIlyan" class="ai-speech">Hallo</div></div>
+<div id="aiLiaz" class="ai-side ai-right" hidden><div class="ai-fig">😎</div><div id="msgLiaz" class="ai-speech">Hi</div></div>
 
-<!-- Sprachsteuerung & Barcode -->
-<div style="position:fixed;bottom:10px;left:50%;transform:translateX(-50%);z-index:9">
-  <button onclick="startSpeech()">🎤 Sprache</button>
-  <button onclick="startScanner()">📷 Barcode</button>
-</div>
-`);
+<!-- Produkt-Dialog -->
+<dialog id="dlg">
+ <form id="form">
+  <input type="hidden" name="id">
+  <input name="name" placeholder="Name" required>
+  <input name="qty" type="number" value="1">
+  <input name="unit" placeholder="Einheit">
+  <input name="cat" placeholder="Kategorie">
+  <select name="loc"><option>Vorratsschrank</option><option>Kühlschrank</option><option>Gefrierfach</option></select>
+  <input name="mhd" type="date">
+  <input name="imgUrl" placeholder="Bild-URL">
+ </form>
+ <footer>
+  <button onclick="dlg.close()" class="ghost2">Abbrechen</button>
+  <button id="saveBtn" class="primary">Speichern</button>
+ </footer>
+</dialog>
 
-/* ===== Init Figuren + Settings ===== */
-drawAvatar(document.getElementById('avIlyan'),'Ilyan','#74c0fc');
-drawAvatar(document.getElementById('avLiaz'),'Liaz','#69db7c');
-renderSettings(); rotateLines();
-</script>
-</body></html>
+<script>
+/* STATE */
+let IS_ADMIN=false, LANG='de'; let db; const DB='pantry-db', STORE='items';
+
+/* DB */
+const openDB=()=>new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(STORE,{keyPath:'id'});r.onsuccess=()=>{db=r.result;res();};});
+const st=(m='readonly')=>db.transaction(STORE,m).objectStore(STORE);
+const getAll=()=>new Promise(r=>{const q=st().getAll();q.onsuccess=()=>r(q.result||[]);});
+const put=(it)=>new Promise(r=>{st('readwrite').put(it).onsuccess=()=>r();});
+
+/* Home Kacheln */
+function buildHome(){
+ const c=document.getElementById('homeChoices');c.innerHTML='';
+ const base=[{id:'inventory',icon:'👀',title:'Nachschauen'},{id:'shop',icon:'🛒',title:'Einkaufsliste'},{id:'dashboard',icon:'📊',title:'Dashboard'},{id:'markets',icon:'🏪',title:'Supermärkte'}];
+ const admin=[{id:'cookbook',icon:'📖',title:'Kochbuch'},{id:'settings',icon:'⚙️',title:'Einstellungen'}];
+ (IS_ADMIN?[...base,...admin]:base).forEach(x=>{
+  const b=document.createElement('button');b.className='choice';b.innerHTML=`<span class="icon">${x.icon}</span><span>${x.title}</span>`;b.onclick=()=>go(x.id);c.appendChild(b);
+ });
+}
+
+/* Navigation */
+function go(id){
+ ['home','app','shopPage','dashPage','marketPage','cookPage','settingsPage'].forEach(x=>document.getElementById(x).hidden=true);
+ if(id==='inventory'){document.getElementById('app').hidden=false;renderInventory();}
+ if(id==='shop'){document.getElementById('shopPage').hidden=false;renderShop();}
+ if(id==='dashboard'){document.getElementById('dashPage').hidden=false;renderDash();}
+ if(id==='markets'){document.getElementById('marketPage').hidden=false;renderMarkets();}
+ if(id==='cookbook'){document.getElementById('cookPage').hidden=false;renderCook();}
+ if(id==='settings'){document.getElementById('settingsPage').hidden=false;renderSettings();}
+ if(id==='home'){document.getElementById('home').hidden=false;buildHome();}
+}
+
+/* Inventory */
+async function renderInventory(){
+ const grid=document.getElementById('grid');grid.innerHTML='';
+ const items=await getAll();
+ if(!items.length){document.getElementById('empty').hidden=false;return;}
+ document.getElementById('empty').hidden=true;
+ items.forEach(it=>{
+  const d=it.mhd?Math.floor((new Date(it.mhd)-new Date())/86400000):null;
+  const card=document.createElement('div');card.className='tile';card.dataset.id=it.id;
+  card.innerHTML=`<div class="imgwrap"><img src="${it.imgUrl||''}" onerror="this.src='https://via.placeholder.com/150'"></div>
+  ${d!==null?(d<0?'<div class="ribbon exp">Abgelaufen</div>':d<=14?'<div class="ribbon">Bald</div>':''):''}
+  <div class="body"><div class="name">${it.name}</div><div class="meta">${it.qty} ${it.unit||''}</div></div>`;
+  card.onclick=()=>openEdit(it.id);
+  grid.appendChild(card);
+ });
+}
+
+/* Shop */
+async function renderShop(){
+ const list=document.getElementById('shopList');list.innerHTML='';
+ const items=(await getAll()).filter(i=>(i.qty||0)==0);
+ if(!items.length){list.innerHTML='Alles da ✅';return;}
+ items.forEach(i=>{const d=document.createElement('div');d.className='stat';d.textContent=i.name;list.appendChild(d);});
+}
+
+/* Dashboard */
+async function renderDash(){
+ const all=await getAll();let soon=all.filter(i=>i.mhd&&Math.floor((new Date(i.mhd)-new Date())/86400000)<=14&&Math.floor((new Date(i.mhd)-new Date())/86400000)>=0);
+ let exp=all.filter(i=>i.mhd&&new Date(i.mhd)<new Date());
+ document.getElementById('dashSoon').textContent='Bald ablaufend: '+soon.map(x=>x.name).join(', ');
+ document.getElementById('dashExp').textContent='Abgelaufen: '+exp.map(x=>x.name).join(', ');
+ document.getElementById('dashTotal').textContent='Gesamt: '+all.length;
+}
+
+/* Markets */
+function renderMarkets(){
+ const m=[{n:'Lidl',l:'https://www.lidl.de'},{n:'Aldi',l:'https://www.aldi.de'},{n:'Rewe',l:'https://www.rewe.de'},{n:'Action',l:'https://www.action.com/de-de'},{n:'Türkischer Markt',l:'#'}];
+ const g=document.getElementById('marketGrid');g.innerHTML='';
+ m.forEach(x=>{const c=document.createElement('div');c.className='tile';c.innerHTML=`<div class="imgwrap">${x.n[0]}</div><div class="body"><div class="name">${x.n}</div><a href="${x.l}" target="_blank">Prospekt ▶️</a></div>`;g.appendChild(c);});
+}
+
+/* Cookbook */
+function renderCook(){
+ const R=[{t:'Menemen',y:'https://www.youtube.com/results?search_query=menemen+sally',i:['Eier','Tomaten','Paprika']},{t:'Pfannkuchen',y:'https://www.youtube.com/results?search_query=pfannkuchen+sally',i:['Mehl','Milch','Ei']}];
+ const g=document.getElementById('recipesGrid');g.innerHTML='';
+ R.forEach(r=>{const c=document.createElement('div');c.className='tile';c.innerHTML=`<div class="imgwrap">🍳</div><div class="body"><div class="name">${r.t}</div><a href="${r.y}" target="_blank">▶️ Video</a></div>`;g.appendChild(c);});
+}
+
+/* Settings */
+function renderSettings(){
+ document.getElementById('settingsBox').innerHTML=`
+  <div class="stat"><strong>Themes</strong><br>
+   <button onclick="setTheme('')">Hell</button>
+   <button onclick="setTheme('dark')">Dunkel</button>
+   <button onclick="setTheme('colorful')">Bunt</button>
+   <button onclick="setTheme('muslim')">Muslimisch</button>
+   <button onclick="setTheme('kids')">Kindlich</button>
+   <button onclick="setTheme('xmas')">Weihnachten</button>
+   <button onclick="setTheme('spring')">Frühling</button>
+  </div>
+  <div class="stat"><strong>AI Figuren</strong><br><button onclick="toggleAI()">An/Aus</button></div>
+ `;
+}
+function setTheme(t){document.body.className=t;}
+function toggleAI(){document.getElementById('aiIlyan').hidden=!document.getElementById('aiIlyan').hidden;document.getElementById('aiLiaz').hidden=!document.getElementById('aiLiaz').hidden;}
+
+/* Dialog */
+document.getElementById('add').onclick=()=>{form.reset
