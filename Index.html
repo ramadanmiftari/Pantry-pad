@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pantry Pad</title>
+<style>
+  :root { --bg:#f6f7fb; --card:#fff; --line:#e5e7eb; --shadow:0 8px 24px rgba(0,0,0,.08); --radius:16px; --gap:14px;}
+  *{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#222}
+  header{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#fff;box-shadow:var(--shadow);position:sticky;top:0;z-index:5}
+  header h1{margin:0;font-size:1.1rem} header input, header select{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
+  header button{padding:10px 12px;border:none;border-radius:10px;background:#1f7aed;color:#fff;font-size:1rem;white-space:nowrap}
+  header select{flex:0 0 auto}
+
+  .wrap{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 60px)}
+  aside{background:#fff;border-right:1px solid var(--line);padding:12px}
+  .aside-title{font-weight:600;margin:4px 0 10px 2px}
+  .cat-list{display:flex;flex-direction:column;gap:8px}
+  .cat{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fafafa;cursor:pointer}
+  .cat.active{background:#eaf2ff;border-color:#bcd4ff}
+
+  main{padding:14px}
+  .grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .tile{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+  .imgwrap{width:100%;aspect-ratio:1/1;background:#eee;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .tile img{width:100%;height:100%;object-fit:cover}
+  .body{padding:10px}
+  .name{font-weight:600;line-height:1.2}
+  .meta{font-size:.9rem;color:#555;margin-top:4px}
+  .ribbon{position:absolute;top:10px;left:10px;padding:6px 8px;border-radius:10px;font-size:.8rem;background:#fff3cd;color:#7a4e00;box-shadow:var(--shadow)}
+  .ribbon.exp{background:#fde2e0;color:#8b1a1a}
+  .quick{display:flex;gap:6px;margin-top:8px}
+  .quick button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 8px}
+
+  .footerbar{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line);background:#fff;position:sticky;bottom:0}
+  .footerbar small{color:#666;margin-left:auto}
+  .empty{text-align:center;color:#777;padding:40px}
+
+  dialog{width:min(540px,96vw);border:none;border-radius:18px;padding:0;box-shadow:var(--shadow)}
+  dialog header, dialog footer{padding:12px 16px}
+  dialog header{border-bottom:1px solid var(--line)}
+  dialog form{padding:16px;display:grid;gap:10px}
+  dialog input, dialog textarea{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem}
+  dialog footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+  .danger{background:#e83f5b;color:#fff;border:none}
+  .primary{background:#1f7aed;color:#fff;border:none}
+  .ghost{background:#fff;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+  <header>
+    <h1 id="appTitle">Pantry Pad</h1>
+    <input id="q" placeholder="Suchen …" />
+    <button id="add">+ Produkt</button>
+    <select id="lang">
+      <option value="de">Deutsch</option>
+      <option value="en">English</option>
+      <option value="tr">Türkçe</option>
+    </select>
+  </header>
+
+  <div class="wrap">
+    <aside>
+      <div class="aside-title" id="catTitle">Kategorien</div>
+      <div class="cat-list" id="cats"></div>
+    </aside>
+
+    <main>
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty" hidden>Keine Produkte. Tippe auf „+ Produkt“.</div>
+    </main>
+  </div>
+
+  <div class="footerbar">
+    <button id="export" class="ghost">⬇️ Export</button>
+    <button id="importBtn" class="ghost">⬆️ Import</button>
+    <input id="importFile" type="file" accept="application/json" style="display:none">
+    <label id="warnLabel">Warnung in
+      <input id="soonDays" type="number" min="1" max="90" value="14" style="width:64px;margin:0 6px"> Tagen
+    </label>
+    <small id="offlineNote">Speicher: lokal · Offline möglich</small>
+  </div>
+
+  <!-- Dialog: Produkt anlegen/bearbeiten -->
+  <dialog id="dlg">
+    <header><strong id="dlgTitle">Produkt</strong></header>
+    <form method="dialog" id="form">
+      <input name="id" type="hidden">
+      <input name="name" placeholder="Name (z. B. Mehl 405)" required>
+      <div style="display:flex;gap:8px">
+        <input name="qty" type="number" step="1" min="0" placeholder="Menge" required>
+        <input name="unit" placeholder="Einheit (Stk, kg, L …)" value="Stk">
+        <input name="cat" placeholder="Kategorie (z. B. Süßwaren)">
+      </div>
+      <div style="display:flex;gap:8px">
+        <input name="mhd" type="date" placeholder="MHD">
+        <input name="place" placeholder="Ort/Regal (optional)">
+      </div>
+      <textarea name="notes" rows="2" placeholder="Notizen (optional)"></textarea>
+
+      <div style="display:grid;gap:8px">
+        <div id="photoLabel" style="font-weight:600">Foto</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input name="imgurl" placeholder="Bild-URL (optional)" style="flex:1">
+          <input id="imgfile" type="file" accept="image/*" capture="environment">
+        </div>
+        <img id="preview" alt="Preview" style="width:100%;max-height:240px;object-fit:contain;background:#f2f2f2;border:1px solid var(--line);border-radius:10px">
+      </div>
+    </form>
+    <footer>
+      <button id="del" class="danger">Löschen</button>
+      <button id="cancel" class="ghost">Abbrechen</button>
+      <button id="save" class="primary">Speichern</button>
+    </footer>
+  </dialog>
+
+<script>
+/* =========================
+   1) Mini-Übersetzungen
+   ========================= */
+const i18n = {
+  de: {
+    appTitle:'Pantry Pad',
+    search:'Suchen …',
+    add:'+ Produkt',
+    categories:'Kategorien',
+    all:'Alle',
+    noCat:'⟨ohne Kategorie⟩',
+    none:'Keine Produkte. Tippe auf „+ Produkt“.',
+    export:'⬇️ Export',
+    import:'⬆️ Import',
+    warnLabel:'Warnung in __DAYS__ Tagen',
+    offline:'Speicher: lokal · Offline möglich',
+    dlgTitleNew:'Produkt hinzufügen',
+    dlgTitleEdit:'Produkt bearbeiten',
+    namePh:'Name (z. B. Mehl 405)',
+    qtyPh:'Menge',
+    unitPh:'Einheit (Stk, kg, L …)',
+    catPh:'Kategorie (z. B. Süßwaren)',
+    datePh:'MHD',
+    placePh:'Ort/Regal (optional)',
+    notesPh:'Notizen (optional)',
+    photo:'Foto',
+    imgUrlPh:'Bild-URL (optional)',
+    delete:'Löschen', cancel:'Abbrechen', save:'Speichern',
+    minus:'−1', plus:'+1', edit:'Bearbeiten',
+    expired:'Abgelaufen', soon:n=>`Bald (${n}T)`,
+    qtyUnit:(q,u)=>`${q} ${u||''}`, mhd:(d)=>`MHD: ${d}`
+  },
+  en: {
+    appTitle:'Pantry Pad',
+    search:'Search …',
+    add:'+ Item',
+    categories:'Categories',
+    all:'All',
+    noCat:'⟨no category⟩',
+    none:'No items. Tap “+ Item”.',
+    export:'⬇️ Export',
+    import:'⬆️ Import',
+    warnLabel:'Warn in __DAYS__ days',
+    offline:'Storage: local · Works offline',
+    dlgTitleNew:'Add item',
+    dlgTitleEdit:'Edit item',
+    namePh:'Name (e.g., Flour 405)',
+    qtyPh:'Quantity',
+    unitPh:'Unit (pcs, kg, L …)',
+    catPh:'Category (e.g., Sweets)',
+    datePh:'Expiry',
+    placePh:'Location/Shelf (optional)',
+    notesPh:'Notes (optional)',
+    photo:'Photo',
+    imgUrlPh:'Image URL (optional)',
+    delete:'Delete', cancel:'Cancel', save:'Save',
+    minus:'−1', plus:'+1', edit:'Edit',
+    expired:'Expired', soon:n=>`Soon (${n}d)`,
+    qtyUnit:(q,u)=>`${q} ${u||''}`, mhd:(d)=>`Exp: ${d}`
+  },
+  tr: {
+    appTitle:'Kiler Paneli',
+    search:'Ara …',
+    add:'+ Ürün',
+    categories:'Kategoriler',
+    all:'Tümü',
+    noCat:'⟨kategori yok⟩',
+    none:'Ürün yok. “+ Ürün”e dokun.',
+    export:'⬇️ Dışa aktar',
+    import:'⬆️ İçeri al',
+    warnLabel:'Uyarı __DAYS__ gün içinde',
+    offline:'Depolama: yerel · Çevrimdışı çalışır',
+    dlgTitleNew:'Ürün ekle',
+    dlgTitleEdit:'Ürünü düzenle',
+    namePh:'Ad (örn. Un 405)',
+    qtyPh:'Adet/Miktar',
+    unitPh:'Birim (Adet, kg, L …)',
+    catPh:'Kategori (örn. Şekerleme)',
+    datePh:'SKT',
+    placePh:'Konum/Raf (opsiyonel)',
+    notesPh:'Notlar (opsiyonel)',
+    photo:'Fotoğraf',
+    imgUrlPh:'Görsel URL (opsiyonel)',
+    delete:'Sil', cancel:'İptal', save:'Kaydet',
+    minus:'−1', plus:'+1', edit:'Düzenle',
+    expired:'Süresi geçti', soon:n=>`Yakında (${n}g)`,
+    qtyUnit:(q,u)=>`${q} ${u||''}`, mhd:(d)=>`SKT: ${d}`
+  }
+};
+let LANG = localStorage.getItem('pantry-lang') || 'de';
+const t = (k, arg) => {
+  const v = i18n[LANG][k];
+  if (typeof v === 'function') return v(arg);
+  if (typeof v === 'string') return v.replace('__DAYS__', soonDays.value || '14');
+  return k;
+};
+
+/* =========================
+   2) Einfacher Speicher (IndexedDB)
+   ========================= */
+const DB='pantry-db', STORE='items'; let db;
+const openDB = () => new Promise((res,rej)=>{
+  const r = indexedDB.open(DB,1);
+  r.onupgradeneeded = () => r.result.createObjectStore(STORE,{keyPath:'id'});
+  r.onsuccess = () => (db=r.result,res());
+  r.onerror = () => rej(r.error);
+});
+const st = (mode='readonly') => db.transaction(STORE,mode).objectStore(STORE);
+const getAll = () => new Promise((res,rej)=>{ const q=st().getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error);});
+const put = (it) => new Promise((res,rej)=>{ const q=st('readwrite').put(it); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+const delItem = (id) => new Promise((res,rej)=>{ const q=st('readwrite').delete(id); q.onsuccess=()=>res(); q.onerror=()=>rej(q.error);});
+
+/* =========================
+   3) Elemente
+   ========================= */
+const grid=document.getElementById('grid'), catsEl=document.getElementById('cats'), emptyEl=document.getElementById('empty');
+const addBtn=document.getElementById('add'), qEl=document.getElementById('q'), langSel=document.getElementById('lang');
+const soonDays=document.getElementById('soonDays'); const warnLabel=document.getElementById('warnLabel');
+const appTitle=document.getElementById('appTitle'), catTitle=document.getElementById('catTitle'), offlineNote=document.getElementById('offlineNote');
+
+const dlg=document.getElementById('dlg'), form=document.getElementById('form');
+const preview=document.getElementById('preview'), imgfile=document.getElementById('imgfile');
+
+/* =========================
+   4) Hilfen
+   ========================= */
+const escapeHtml = s => s?.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))||'';
+const daysUntil = ds => { if(!ds) return null; const now=new Date(); now.setHours(0,0,0,0); const d=new Date(ds+'T00:00:00'); return Math.floor((d-now)/(1000*60*60*24)); };
+const fileToDataURL = f => new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(f); });
+
+/* =========================
+   5) Render
+   ========================= */
+let ACTIVE_CAT='All';
+async function render(){
+  // Texte/Labels
+  appTitle.textContent=t('appTitle'); document.title=t('appTitle');
+  qEl.placeholder=t('search'); addBtn.textContent=t('add'); catTitle.textContent=t('categories');
+  emptyEl.textContent=t('none'); offlineNote.textContent=t('offline');
+  warnLabel.innerHTML = t('warnLabel').replace('__DAYS__', `<input id="soonDays" type="number" min="1" max="90" value="${soonDays.value}" style="width:64px;margin:0 6px">`).replace(/<[^>]*>/g,''); // text only
+  // soonDays label already exists; just leave as-is
+
+  const all = await getAll();
+  // Kategorien zählen
+  const counts={ [t('all')]: all.filter(i=>!i.archived).length };
+  for(const it of all){ if(it.archived) continue; const c=(it.cat||'').trim() || t('noCat'); counts[c]=(counts[c]||0)+1; }
+  catsEl.innerHTML='';
+  Object.keys(counts).sort((a,b)=> a===t('all')?-1:(b===t('all')?1:a.localeCompare(b))).forEach(cat=>{
+    const row=document.createElement('div'); row.className='cat'+((ACTIVE_CAT===cat|| (ACTIVE_CAT==='All'&&cat===t('all')))?' active':'');
+    row.innerHTML=`<span>${escapeHtml(cat)}</span><span>${counts[cat]}</span>`;
+    row.addEventListener('click',()=>{ ACTIVE_CAT=cat; drawGrid(all); });
+    catsEl.appendChild(row);
+  });
+  drawGrid(all);
+}
+function drawGrid(all){
+  const q=(qEl.value||'').toLowerCase();
+  const items = all.filter(it=>{
+    const hay=[it.name,it.cat,it.notes,it.place].filter(Boolean).join(' ').toLowerCase();
+    const passQ = !q || hay.includes(q);
+    const passC = (ACTIVE_CAT===t('all')) || ((it.cat||'').trim()||t('noCat'))===ACTIVE_CAT;
+    return passQ && passC && !it.archived;
+  }).sort((a,b)=> (a.name||'').localeCompare(b.name||''));
+  grid.innerHTML='';
+  if(items.length===0){ emptyEl.hidden=false; return; } else emptyEl.hidden=true;
+
+  for(const it of items){
+    const d=daysUntil(it.mhd); const soon=d!==null && d>=0 && d<=Number(soonDays.value||14); const exp=d!==null && d<0;
+
+    const card=document.createElement('div'); card.className='tile';
+    const imgwrap=document.createElement('div'); imgwrap.className='imgwrap';
+    const img=document.createElement('img'); const src=it.imgData||it.imgUrl||''; img.alt=it.name||''; if(src) img.src=src; else imgwrap.textContent='📷';
+    imgwrap.appendChild(img); card.appendChild(imgwrap);
+
+    if(soon||exp){ const r=document.createElement('div'); r.className='ribbon'+(exp?' exp':''); r.textContent=exp?t('expired'):t('soon',d); card.appendChild(r); }
+
+    const body=document.createElement('div'); body.className='body';
+    const metaParts=[ i18n[LANG].qtyUnit(it.qty??0, it.unit||'' ) ];
+    if(it.mhd) metaParts.push(i18n[LANG].mhd(it.mhd));
+    if(it.cat) metaParts.push(it.cat);
+    body.innerHTML=`<div class="name">${escapeHtml(it.name||'')}</div><div class="meta">${escapeHtml(metaParts.join(' · '))}</div>`;
+
+    const quick=document.createElement('div'); quick.className='quick';
+    quick.append(
+      mkBtn(t('minus'), async()=>{ it.qty=Math.max(0,(it.qty||0)-1); if(it.qty===0) it.archived=true; await put(it); render(); }),
+      mkBtn(t('plus'), async()=>{ it.qty=(it.qty||0)+1; it.archived=false; await put(it); render(); }),
+      mkBtn(t('edit'), ()=> openDialog(it))
+    );
+    body.appendChild(quick);
+
+    card.appendChild(body); grid.appendChild(card);
+  }
+}
+const mkBtn=(label,fn)=>{ const b=document.createElement('button'); b.textContent=label; b.addEventListener('click',fn); return b; };
+
+/* =========================
+   6) Dialog
+   ========================= */
+function openDialog(it){
+  form.reset(); preview.src=''; delete preview.dataset.dataurl;
+  document.getElementById('dlgTitle').textContent = it ? i18n[LANG].dlgTitleEdit : i18n[LANG].dlgTitleNew;
+
+  // Platzhalter in akt. Sprache
+  form.elements['name'].placeholder=i18n[LANG].namePh;
+  form.elements['qty'].placeholder=i18n[LANG].qtyPh;
+  form.elements['unit'].placeholder=i18n[LANG].unitPh;
+  form.elements['cat'].placeholder=i18n[LANG].catPh;
+  form.elements['mhd'].placeholder=i18n[LANG].datePh;
+  form.elements['place'].placeholder=i18n[LANG].placePh;
+  form.elements['notes'].placeholder=i18n[LANG].notesPh;
+  form.elements['imgurl'].placeholder=i18n[LANG].imgUrlPh;
+  document.getElementById('photoLabel').textContent=i18n[LANG].photo;
+  document.getElementById('del').textContent=i18n[LANG].delete;
+  document.getElementById('cancel').textContent=i18n[LANG].cancel;
+  document.getElementById('save').textContent=i18n[LANG].save;
+
+  if(it){
+    for(const [k,v] of Object.entries(it)){ if(form.elements[k]) form.elements[k].value = v ?? ''; }
+    if(it.imgData){ preview.src=it.imgData; preview.dataset.dataurl=it.imgData; }
+    else if(it.imgUrl){ preview.src=it.imgUrl; }
+  }
+  dlg.showModal();
+}
+document.getElementById('cancel').addEventListener('click',()=>dlg.close());
+document.getElementById('del').addEventListener('click', async ()=>{
+  const id=new FormData(form).get('id'); if(id && confirm('Delete? / Löschen?')){ await delItem(id); dlg.close(); render(); }
+});
+document.getElementById('save').addEventListener('click', async ()=>{
+  const fd=new FormData(form);
+  const item={
+    id: fd.get('id') || crypto.randomUUID(),
+    name:(fd.get('name')||'').trim(),
+    qty:Number(fd.get('qty')||0),
+    unit:(fd.get('unit')||'').trim(),
+    cat:(fd.get('cat')||'').trim(),
+    mhd: fd.get('mhd') || '',
+    place:(fd.get('place')||'').trim(),
+    notes:(fd.get('notes')||'').trim(),
+    imgUrl:(fd.get('imgurl')||'').trim(),
+    imgData: preview.dataset.dataurl || '',
+    archived:false,
+    updatedAt:new Date().toISOString(),
+    createdAt: fd.get('id') ? undefined : new Date().toISOString()
+  };
+  if(!item.name) return alert('Name fehlt / Missing name');
+  await put(item); dlg.close(); render();
+});
+// Bild-Preview
+imgfile.addEventListener('change', async (e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  const b64=await fileToDataURL(f);
+  form.elements['imgurl'].value=''; preview.src=b64; preview.dataset.dataurl=b64;
+});
+form.elements['imgurl'].addEventListener('input', ()=>{
+  preview.src=form.elements['imgurl'].value||''; delete preview.dataset.dataurl;
+});
+
+/* =========================
+   7) Aktionen & Start
+   ========================= */
+document.getElementById('export').addEventListener('click', async ()=>{
+  const data=await getAll(); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=Object.assign(document.createElement('a'),{href:url,download:'pantry-export.json'}); a.click(); URL.revokeObjectURL(url);
+});
+const importFile=document.getElementById('importFile');
+document.getElementById('importBtn').addEventListener('click',()=>importFile.click());
+importFile.addEventListener('change', async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{ const arr=JSON.parse(await f.text()); const tx=db.transaction(STORE,'readwrite'); const s=tx.objectStore(STORE); for(const it of arr) s.put(it); tx.oncomplete=render; }
+  catch(err){ alert('Import failed / Import fehlgeschlagen'); }
+});
+
+// Suche, Sprache, Warnschwelle
+qEl.addEventListener('input', render);
+langSel.value=LANG;
+langSel.addEventListener('change', ()=>{ LANG=langSel.value; localStorage.setItem('pantry-lang',LANG); render(); });
+soonDays.addEventListener('input', ()=>{ localStorage.setItem('pantry-soon', soonDays.value||'14'); render(); });
+
+// Add-Button
+document.getElementById('add').addEventListener('click', ()=> openDialog());
+
+// Start
+(async function(){
+  await openDB();
+  soonDays.value = localStorage.getItem('pantry-soon') || '14';
+  render();
+})();
+</script>
+</body>
+</html>
